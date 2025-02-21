@@ -2,122 +2,34 @@ import java.util.Arrays;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-        int [] nums = {0,1,2,2,3,0,4,2}; int val=2;
-//        int [] nums = {3,2,2,3}; int val=3;
+//        int [] nums = {0,0,1,1,1,2,2,3,3,4};
+//        int [] nums = {1,1,2};
 
-//        int [] nums = {2,2,3}; int val=2;
+        int [] nums = {2,2};
 //        int [] nums = {4,5}; int val=9;
 //        int [] nums = {1}; int val=1;
-        int[] removed = removeElement3(nums,val);
+        int[] removed = removeDuplicates(nums);
         System.out.println(Arrays.toString(Arrays.stream(removed).toArray()));
     }
 
 
-//    public static int[] removeElement(int[] nums, int val) {
-//        int l=0;
-//
-//        for (int r = 0; r < nums.length; r++) {
-//            if(nums[r]!=val){
-//                nums[l] = nums[r];
-//                l++;
-//            }
-//        }
-//        System.out.println("l : "+l);
-//
-//        return nums;
-//    }
-//public static int[] removeElement(int[] nums, int val) {
-//    int n= nums.length;
-//    int l=0,r=n-1;
-//    while (l<=r){
-//        if (nums[l]==val && nums[r]==val){
-//            r--;
-//        }
-//        else if(nums[l]!=val && nums[r]==val){
-//            l++;r--;
-//        } else if (nums[l]!=val && nums[r]!=val) {
-//            l++;
-//        } else if(nums[l]==val && nums[r]!=val){
-//            nums[l] = nums[r];
-//            l++;r--;
-//        }
-//    }
-//
-//    System.out.println("l : "+(l));
-//
-//    return nums;
-//    }
 
-    public static int[] removeElement2(int[] nums, int val) {
+
+    public static int[] removeDuplicates(int[] nums) {
         int n= nums.length;
-        int l=0,r=n-1;
-        while (l<=r){
-            if (nums[l]==val && nums[r]==val){
-                r--;
-            }
-            else if(nums[l]!=val && nums[r]==val){
-                l++;r--;
-            } else if (nums[l]!=val && nums[r]!=val) {
+        int l=0,r=0;
+        for (; r < n; r++) {
+            if(nums[r]!=nums[l]){
+                nums[l+1]=nums[r];
                 l++;
-            } else if(nums[l]==val && nums[r]!=val){
-                nums[l] = nums[r];
-                l++;r--;
             }
         }
 
-        System.out.println("l : "+(l));
+        System.out.println("l : "+(l+1));
 
         return nums;
     }
 
-//    public static int[] removeElement3(int[] nums, int val) {
-//        int n= nums.length;
-//        int l=0,r=n-1;
-//        while (l<=r){
-//            while(nums[l]!=val && l!=r){
-//                l++;
-//            }
-//            while(nums[r]==val && l!=r){
-//                r--;
-//            }
-//
-//            if(nums[l]==val && nums[r]!=val){
-//                nums[l] = nums[r];
-//                l++;r--;
-//            }
-//            else if(nums[l]!=val && nums[r]!=val){
-//                l++;
-//            }
-//            else if(nums[l]==val && nums[r]==val){
-//                r--;
-//            }
-//        }
-//        System.out.println("l : "+l);
-//        System.out.println("r : "+r);
-//        System.out.println("l-r : "+(l-r));
-//
-//        return nums;
-//    }
-public static int[] removeElement3(int[] nums, int val) {
-    int n= nums.length;
-    int l=0,r=n-1;
-    while (l<=r){
-        while((nums[l]==val && nums[r]!=val)){
-            r--;
-        }
-        while((nums[l]!=val && nums[r]!=val)){
-            l++;
-        }
 
-        if(nums[l]==val && nums[r]!=val){
-            nums[l] = nums[r];
-            l++;r--;
-        }
-    }
-    System.out.println("l : "+l);
-    System.out.println("r : "+r);
-    System.out.println("l-r : "+(l-r));
 
-    return nums;
-}
 }
