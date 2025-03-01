@@ -3,28 +3,42 @@ import java.util.HashMap;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-        int [] prices = {7,6,4,3,1};
-//        int prices[] = {2,1,2,1,0,1,2};
+//        String s = "XIX";
+        String s = "MCMXCIV";
 
-
-        int maxProfit = maxProfit(prices);
-        System.out.println("Max Profit : "+maxProfit);
+        int intValue = romanToInt(s);
+        System.out.println("roman to int : "+intValue);
     }
 
 
 
-    public static int maxProfit(int[] prices) {
+    public static int romanToInt(String s) {
 
-        int lowestBuyingPrice = Integer.MAX_VALUE,maxProfit = Integer.MIN_VALUE;
-        for (int i = 0; i < prices.length; i++) {
-            if (prices[i] < lowestBuyingPrice){
-                lowestBuyingPrice = prices[i];
+        HashMap<Character,Integer> valueMap = new HashMap<>();
+        valueMap.put('I',1);
+        valueMap.put('V',5);
+        valueMap.put('X',10);
+        valueMap.put('L',50);
+        valueMap.put('C',100);
+        valueMap.put('D',500);
+        valueMap.put('M',1000);
+
+        int roman = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+
+            if(i+1>=s.length()){
+                return roman + valueMap.get(s.charAt(i));
             }
-            if (prices[i]-lowestBuyingPrice>maxProfit){
-                maxProfit = prices[i]-lowestBuyingPrice;
+            else if (valueMap.get(s.charAt(i)) >= valueMap.get(s.charAt(i+1))){
+                roman+=valueMap.get(s.charAt(i));
+            }else if(valueMap.get(s.charAt(i)) < valueMap.get(s.charAt(i+1))){
+                roman+= valueMap.get(s.charAt(i+1))-valueMap.get(s.charAt(i));
+                i++;
             }
         }
-        return maxProfit;
+
+        return roman;
     }
 
 }
