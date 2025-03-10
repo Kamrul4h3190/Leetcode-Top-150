@@ -43,11 +43,4 @@
     </task>
     <servers />
   </component>
-  <component name="XDebuggerManager">
-    <watches-manager>
-      <inline-watch fileUrl="file://$PROJECT_DIR$/src/DummyClass1.java" line="34">
-        <watch expression="nums" />
-      </inline-watch>
-    </watches-manager>
-  </component>
 </project>

@@ -3,64 +3,31 @@ import java.util.HashMap;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-//        int [] nums = {1,1,1,2,3};
-//        int [] nums = {0,0,1,1,1,2,2,3,3,4};
-//        int[] nums = {0,0,1,1,1,1,2,3,3};
-        int [] nums = {1,1,1,1,2,3,3,3};
-//        int [] nums = {1,1,1,2,2,3};
-//        int [] nums = {1,1,1,2,2,2,3,3};
-//        int [] nums = {1,1,1};
-        int endPositin = removeDuplicate5(nums);
-        System.out.println("after remove : "+ Arrays.toString(nums));
-        System.out.println("end position : "+endPositin);
+//        int [] nums = {1,2,3,4,5,6,7};int k=2;
+        int [] nums = {-1};int k=2;
+
+//        reverse(nums,0, 0);
+        rotate(nums,k);
+        System.out.println("after rotate : "+ Arrays.toString(nums));
+
     }
-    public static int removeDuplicate5(int[] nums) {
 
-        if(nums.length<3) return nums.length;
-        int i,p=2;
-        for ( i = 2; i < nums.length;i++ ) {
+    public static void rotate(int[] nums, int k) {
+        int n = nums.length;
+        k=k%n;
+        reverse(nums,0, n-1);
 
-            if (nums[i]!=nums[p] && nums[i]>nums[p-2]){
-                nums[p]=nums[i];
-                p++;
-            }
-            else if (nums[i]!=nums[p-2])
-                p++;
+        reverse(nums,0,k-1);
+        reverse(nums,k,n-1);
+    }
+
+    private static void reverse(int[] nums,int start,int end){
+        while (start<end){
+            int temp = nums[start];
+            nums[start]=nums[end];
+            nums[end]=temp;
+            start++;
+            end--;
         }
-        return p;
     }
-
-
-
-    public static int removeDuplicates(int[] nums) {
-
-        int i,j=0;
-        for ( i = 1; i < nums.length; ) {
-            while (nums[j]==nums[i-1] && j+1<nums.length){
-                j++;
-            }
-
-            if (nums[i]<=nums[i-1]  &&nums[j]!=nums[i-1]){
-                nums[i]=nums[j];
-                i++;
-            }
-            if (nums[i]>nums[i-1]) i++;
-            if (j== nums.length-1) break;
-        }
-        return i;
-    }
-
-
-    public static int removeDuplicates2(int[] nums) {
-        int n= nums.length;
-        int l=0,r=0;
-        for (; r < n; r++) {
-            if(nums[r]!=nums[l]){
-                nums[l+1]=nums[r];
-                l++;
-            }
-        }
-        return l+1;
-    }
-
 }
