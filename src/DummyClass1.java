@@ -1,33 +1,29 @@
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-//        int [] nums = {1,2,3,4,5,6,7};int k=2;
-        int [] nums = {-1};int k=2;
+        int [] prices = {7,1,5,3,6,4};
+//        int [] prices = {7,2,1,4,5,3,6,4};
+//        int [] prices = {1,2,3,4,5};
 
-//        reverse(nums,0, 0);
-        rotate(nums,k);
-        System.out.println("after rotate : "+ Arrays.toString(nums));
+        int maxProfit = maxProfit(prices);
+        System.out.println("max profit : "+ maxProfit);
 
     }
 
-    public static void rotate(int[] nums, int k) {
-        int n = nums.length;
-        k=k%n;
-        reverse(nums,0, n-1);
+    public static int maxProfit(int[] prices) {
+        int maxProfit = 0;
+        int n = prices.length; if (n<2) return maxProfit;
 
-        reverse(nums,0,k-1);
-        reverse(nums,k,n-1);
-    }
-
-    private static void reverse(int[] nums,int start,int end){
-        while (start<end){
-            int temp = nums[start];
-            nums[start]=nums[end];
-            nums[end]=temp;
-            start++;
-            end--;
+        int buyPrice = 0;
+        for (int i = 1; i < n; i++) {
+            if (prices[i]<prices[i-1]){
+                buyPrice = prices[i];
+            } else if (prices[i]>buyPrice && prices[i]>prices[i-1]) {
+                maxProfit += prices[i]-prices[i-1];
+            }
         }
+
+        return maxProfit;
     }
 }
