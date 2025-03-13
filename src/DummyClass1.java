@@ -2,28 +2,47 @@ import java.util.Arrays;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-        int [] prices = {7,1,5,3,6,4};
-//        int [] prices = {7,2,1,4,5,3,6,4};
-//        int [] prices = {1,2,3,4,5};
+//        int [] nums = {2,0};
+//        int [] nums = {0,2,3};
+//        int [] nums = {0};
+        int [] nums = {3,2,1,0,4};
+//        int [] nums = {2,3,1,1,4};
+//        int [] nums = {1,1,1,0};
 
-        int maxProfit = maxProfit(prices);
-        System.out.println("max profit : "+ maxProfit);
+        boolean jump = canJump2(nums);
+        System.out.println("jump : "+ jump);
 
     }
+    public static boolean canJump2(int[] nums) {
+        int jumpLen = nums[0];
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
 
-    public static int maxProfit(int[] prices) {
-        int maxProfit = 0;
-        int n = prices.length; if (n<2) return maxProfit;
+            if (jumpLen>=n-1 || nums[i]==n-1) return true;
+            if (i==jumpLen && i<n-1 && nums[i]==0) return false;
 
-        int buyPrice = 0;
-        for (int i = 1; i < n; i++) {
-            if (prices[i]<prices[i-1]){
-                buyPrice = prices[i];
-            } else if (prices[i]>buyPrice && prices[i]>prices[i-1]) {
-                maxProfit += prices[i]-prices[i-1];
+
+            if (i+nums[i] > jumpLen){
+                jumpLen =i+nums[i];
             }
         }
 
-        return maxProfit;
+        return false;
     }
+    public static boolean canJump(int[] nums) {
+        int jumpLen = nums[0];
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+
+            if (jumpLen>=n-1) return true;
+            if (i>jumpLen) return false;
+            if (i+nums[i] > jumpLen){
+                jumpLen =i+nums[i];
+            }
+        }
+
+        return false;
+    }
+
+
 }
