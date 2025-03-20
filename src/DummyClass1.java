@@ -3,30 +3,27 @@ import java.util.Arrays;
 public class DummyClass1 {
     public static void main(String[] args) {
 
-//        int[] nums = {1,2,3,4};
-        int[] nums = {3,4,6,1,2};
-//        int[] nums = {-1,1,0,-3,3};
-        int[] prods = productExceptSelf(nums);
-        System.out.println("products : "+ Arrays.toString(prods));
-
+//        int[] gas = {1,2,3,4,5};int[] cost = {3,4,5,1,2};
+//        int[] gas = {2,3,4};int[] cost = {3,4,3};
+        int[] gas = {5,1,2,3,4};int[] cost = {4,4,1,5,1};
+        int start = canCompleteCircuit(gas,cost);
+        System.out.println("start : "+ start);
     }
 
-    public static int[] productExceptSelf(int[] nums) {
-        int n = nums.length;
-        int[] prefixProds = new int[n];
+    public static int canCompleteCircuit(int[] gas, int[] cost) {
+        int n= gas.length,totalGas=0,totalCost=0;
+        for (int i = 0; i < n; i++) {totalGas+=gas[i];totalCost+=cost[i];}
+        if (totalCost > totalGas) return -1;
 
-        int prefix = 1;prefixProds[0] = prefix;
-        for (int i = 1 ; i <n ; i++) {
-            prefixProds[i] = prefixProds[i-1]*nums[i-1];
+        int tank=0,start=0;
+        for (int i = 0; i < n; i++) {
+            tank += gas[i]-cost[i];
+            if (tank<0){
+//                System.out.println("tank,start : "+tank+","+(i+1));
+                tank=0; start=i+1;
+            }
         }
-
-        int suffix=1;
-        for (int i = n-2; i >=0 ; i--) {
-            suffix = suffix*nums[i+1];
-            prefixProds[i] = prefixProds[i]*suffix;
-        }
-
-        return prefixProds;
+        return start;
     }
 
 }
