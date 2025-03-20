@@ -3,27 +3,24 @@ import java.util.Arrays;
 public class DummyClass1 {
     public static void main(String[] args) {
 
-//        int[] gas = {1,2,3,4,5};int[] cost = {3,4,5,1,2};
-//        int[] gas = {2,3,4};int[] cost = {3,4,3};
-        int[] gas = {5,1,2,3,4};int[] cost = {4,4,1,5,1};
-        int start = canCompleteCircuit(gas,cost);
-        System.out.println("start : "+ start);
+        int num = 2837;
+//        int num = 3749;
+        String roman = intToRoman(num);
+        System.out.println("roman : "+ roman);
     }
 
-    public static int canCompleteCircuit(int[] gas, int[] cost) {
-        int n= gas.length,totalGas=0,totalCost=0;
-        for (int i = 0; i < n; i++) {totalGas+=gas[i];totalCost+=cost[i];}
-        if (totalCost > totalGas) return -1;
-
-        int tank=0,start=0;
-        for (int i = 0; i < n; i++) {
-            tank += gas[i]-cost[i];
-            if (tank<0){
-//                System.out.println("tank,start : "+tank+","+(i+1));
-                tank=0; start=i+1;
+    public static String intToRoman(int num) {
+        int[] values =    {1000,900,500,400,100,  90, 50,  40, 10,  9,  5,  4,    1};
+        String[] romans = {"M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"};
+        StringBuilder roman = new StringBuilder();
+        for (int i = 0; i < values.length;i++) {
+            if (num<=0) break;
+            while (num>=values[i]){
+                roman.append(romans[i]);
+                num-=values[i];
             }
         }
-        return start;
+        return roman.toString();
     }
 
 }
