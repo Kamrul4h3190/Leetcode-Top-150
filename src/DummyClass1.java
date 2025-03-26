@@ -2,66 +2,62 @@ import java.util.Arrays;
 
 public class DummyClass1 {
     public static void main(String[] args) {
+//        int[] height = {4,2,0,3,2,5};
+//        int[] height = {4,2,3};
+        int[] height = {0,1,0,2,1,0,1,3,2,1,2,1};
+        int water = trap2(height);
+        System.out.println("water :"+water);
+    }
+    //time-O(n),space-O(1)
+    public static int trap2(int[] height) {
+        int water = 0,left = 0,right = height.length-1;
+        int leftMax=height[0],rightMax=height[height.length-1];
+        while (left<right){
 
-//        int[] ratings = {1,2,4,2,1};
-//        int[] ratings = {1,2,3,3,1,2,1};
-//        int[] ratings = {1,3,2,2,1};
-//        int[] ratings = {1,2,5,7,8,4,2,5,2,2};
-//        int[] ratings = {1,0,2};
-//        int[] ratings = {1,2,2};
-        int[] ratings = {0,2,4,7,6,5,4,3,2,1,1,1,2,3,4,2,1,1,1};
-        int candy = candy2(ratings);
-        System.out.println("candy :"+candy);
+            if (height[left] > leftMax) leftMax = height[left];
+            if (height[right] > rightMax) rightMax = height[right];
+
+            if (height[left]<=rightMax){
+                water+= leftMax-height[left];
+                left++;
+            }
+            else {
+                water+= rightMax-height[right];
+                right--;
+            }
+        }
+
+        return water;
     }
 
-    //time-o(n), space-o(1)
-    public static int candy2(int[] ratings) {
-        int n=ratings.length,candies=1;
-        int i=1;
-        while (i < n) {
-            int up=1,down=0;
-            if (ratings[i]==ratings[i-1]){
-                i++;
-                candies++;
-                continue;
+
+    //time-O(n),space-O(n)
+    public static int trap(int[] height) {
+        int water = 0,n= height.length;
+
+        int[] left = new int[n];int leftMax=0;
+        for (int i = 0; i < n; i++) {
+            if (height[i]>leftMax){
+                leftMax=height[i];
             }
-            while (i<n && ratings[i]>ratings[i-1]){
-                up++;
-                candies+=up;
-                i++;
-            }
-            while (i<n && ratings[i]<ratings[i-1]){
-                down++;
-                candies+=down;
-                i++;
-            }
-            down++;
-//            System.out.println("up,down:"+up+","+down);
-            if ( down>up){
-                candies+= down-up;
-            }
+            left[i]=leftMax;
         }
-        return candies;
-    }
+//        System.out.println(Arrays.toString(left));
 
-    //time-o(n), space - o(n)
-    public static int candy(int[] ratings) {
-        int n=ratings.length;
-        int[] candies = new int[n];
-        Arrays.fill(candies,1);
-
-        for (int i = 1; i < n; i++) {
-            if (ratings[i]>ratings[i-1] && candies[i]<=candies[i-1])
-                candies[i] = candies[i-1]+1;
+        int[] right = new int[n];int rightMax=0;
+        for (int i = n-1; i >= 0; i--) {
+            if (height[i]>rightMax){
+                rightMax=height[i];
+            }
+            right[i]=rightMax;
         }
-        System.out.println(Arrays.toString(candies));
+//        System.out.println(Arrays.toString(right));
 
-        for (int i = n-2; i >=0 ; i--) {
-            if (ratings[i]>ratings[i+1] && candies[i]<=candies[i+1])
-                candies[i] = candies[i+1]+1;
+        for (int i = 0; i < n; i++) {
+            int surface = Math.min(left[i],right[i]);
+            water+= surface-height[i];
         }
-        System.out.println(Arrays.toString(candies));
 
-        return Arrays.stream(candies).sum();
+        return water;
     }
 }
