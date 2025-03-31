@@ -1,17 +1,17 @@
 public class DummyClass1 {
     public static void main(String[] args) {
-        String s = "A man, a plan, a canal: Panama";
-        boolean isPalindrome= isPalindrome(s);
-        System.out.println("palindrome : " +isPalindrome);
+        String s = "axc",t="ahbgdc";
+        boolean isSubsequence= isSubsequence(s,t);
+        System.out.println("palindrome : " +isSubsequence);
     }
-    public static boolean isPalindrome(String s) {
-        s = s.toLowerCase().replaceAll("[^a-zA-Z0-9]","");
-        int i=0,j=s.length()-1;
-        while (i<=j){
-            if (s.charAt(i)!=s.charAt(j)) return false;
-            i++;j--;
+    public static boolean isSubsequence(String s, String t) {
+        int i=0,j=0;
+        while (i<s.length() && j<t.length()){
+            if (s.charAt(i)==t.charAt(j))i++;
+            j++;
         }
-        return true;
+        //if last char is ok i++ becomes equals s.len not s.len-1;
+        return i == s.length();
     }
 }
 
