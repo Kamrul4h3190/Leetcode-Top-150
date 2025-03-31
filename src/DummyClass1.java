@@ -2,18 +2,37 @@ import java.util.Arrays;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-        int[] numbers = {2,7,11,15};int target = 18;
-        int[] positions= twoSum(numbers,target);
-        System.out.println("positions : " + Arrays.toString(positions));
+        int[] height = {1,8,6,2,5,4,8,3,7};
+//        int[] height = {1,1};
+        int maxWater = maxArea(height);
+        System.out.println("maxWater : " + maxWater);
     }
-    public static int[] twoSum(int[] numbers, int target) {
-        int i=0,j=numbers.length-1;
-        while (i<j){
-            if (numbers[i]+numbers[j]==target) return new int[]{i+1,j+1};
-            if (numbers[i]+numbers[j]>target) j--;
-            else i++;
+    public static int maxArea(int[] height) {
+        int left=0,right=height.length-1,maxWater=0,water=0;
+        while (left<right){
+            if (height[left]<=height[right]){
+                water = height[left]*(right-left);
+                maxWater = water>maxWater ? water : maxWater;
+                left++;
+            }else {
+                water = height[right]*(right-left);
+                maxWater = water>maxWater ? water : maxWater;
+                right--;
+            }
         }
-        return new int[]{};
+        return maxWater;
+    }
+    public static int maxArea2(int[] height) {
+        int left=0,right=height.length-1,maxWater=0,currWater=0;
+        while (left<right){
+            currWater = (height[left]<=height[right]) ?
+                    height[left]*(right-left): height[right]*(right-left);
+            maxWater = currWater>maxWater ? currWater : maxWater;
+
+            if (height[left]<=height[right]) left++;
+            else right--;
+        }
+        return maxWater;
     }
 }
 
