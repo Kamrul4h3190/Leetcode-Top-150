@@ -1,17 +1,19 @@
+import java.util.Arrays;
+
 public class DummyClass1 {
     public static void main(String[] args) {
-        String s = "axc",t="ahbgdc";
-        boolean isSubsequence= isSubsequence(s,t);
-        System.out.println("palindrome : " +isSubsequence);
+        int[] numbers = {2,7,11,15};int target = 18;
+        int[] positions= twoSum(numbers,target);
+        System.out.println("positions : " + Arrays.toString(positions));
     }
-    public static boolean isSubsequence(String s, String t) {
-        int i=0,j=0;
-        while (i<s.length() && j<t.length()){
-            if (s.charAt(i)==t.charAt(j))i++;
-            j++;
+    public static int[] twoSum(int[] numbers, int target) {
+        int i=0,j=numbers.length-1;
+        while (i<j){
+            if (numbers[i]+numbers[j]==target) return new int[]{i+1,j+1};
+            if (numbers[i]+numbers[j]>target) j--;
+            else i++;
         }
-        //if last char is ok i++ becomes equals s.len not s.len-1;
-        return i == s.length();
+        return new int[]{};
     }
 }
 
