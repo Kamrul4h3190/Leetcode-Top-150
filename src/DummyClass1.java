@@ -1,38 +1,37 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-        int[] height = {1,8,6,2,5,4,8,3,7};
-//        int[] height = {1,1};
-        int maxWater = maxArea(height);
-        System.out.println("maxWater : " + maxWater);
+//        int[] nums = {-1,0,1,2,-1,-4};
+//        int[] nums = {0,0,0,0};
+        int[] nums = {-4,-1,-1,0,0,1,1,2,3};
+        List<List<Integer>> triplets = threeSum(nums);
+        System.out.println(triplets);
     }
-    public static int maxArea(int[] height) {
-        int left=0,right=height.length-1,maxWater=0,water=0;
-        while (left<right){
-            if (height[left]<=height[right]){
-                water = height[left]*(right-left);
-                maxWater = water>maxWater ? water : maxWater;
-                left++;
-            }else {
-                water = height[right]*(right-left);
-                maxWater = water>maxWater ? water : maxWater;
-                right--;
+    public static List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> triplets = new ArrayList<>();
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length - 2; i++) {
+            if (i>0 && nums[i]==nums[i-1]) continue;
+            int left = i+1,right = nums.length-1;
+
+            while (left<right){
+                int sum = nums[i]+nums[left]+nums[right];
+                if (sum==0){
+                    triplets.add(Arrays.asList(nums[i],nums[left],nums[right]));
+                    left++;right--;
+                    while (left<right && nums[left]==nums[left-1]) left++;
+                    while (left<right && nums[right]==nums[right+1]) right--;
+                } else if (sum<0) {
+                    left++;
+                }else {
+                    right--;
+                }
             }
         }
-        return maxWater;
-    }
-    public static int maxArea2(int[] height) {
-        int left=0,right=height.length-1,maxWater=0,currWater=0;
-        while (left<right){
-            currWater = (height[left]<=height[right]) ?
-                    height[left]*(right-left): height[right]*(right-left);
-            maxWater = currWater>maxWater ? currWater : maxWater;
-
-            if (height[left]<=height[right]) left++;
-            else right--;
-        }
-        return maxWater;
+        return triplets;
     }
 }
 
