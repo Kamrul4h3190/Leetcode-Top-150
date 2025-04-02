@@ -1,27 +1,34 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-        int[] nums = {2,3,1,2,4,3};int target = 7;
-//        int[] nums = {1,4,4};int target = 4;
-//        int[] nums = {1,1,1,1,1,1,1,1};int target = 11;
-//        int[] nums = {1,2,3,4,5};int target = 11;
-        int minLength = minSubArrayLen(target,nums);
-        System.out.println("minLength : "+minLength);
+//        String s =  "abcabcbb";
+//        String s = "cadbzabcd";
+        String s =  " ";
+//        String s =  "au";
+//        String s =  "dvdf";
+//        String s = "pwwkew";
+        int len = lengthOfLongestSubstring(s);
+        System.out.println("len : "+len);
     }
-    public static int minSubArrayLen(int target, int[] nums) {
-        int left=0,right=0,sum=0,len=Integer.MAX_VALUE;
-        for (right = 0; right < nums.length ; right++) {
-            sum+=nums[right];
-            while (sum>=target){
-                len = Math.min(len,right-left+1);
-                sum-=nums[left];
-                left++;
+    public static int lengthOfLongestSubstring(String s) {
+        int length = 0,left = 0,right=0,n=s.length();
+        HashMap<Character,Integer> positionMap = new HashMap<>();
+
+        while (right<n){
+            Character curr = s.charAt(right);
+            if (!positionMap.containsKey(curr)){
+                positionMap.put(curr,right);
+            }else {
+                int position = positionMap.get(curr);
+                if (position >= left){left=position+1;}
+                positionMap.put(curr,right);
             }
+            right++;
+            length = Math.max(length,right-left);
         }
-        return len==Integer.MAX_VALUE? 0:len;
+        return length;
     }
 }
 
