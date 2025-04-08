@@ -2,35 +2,33 @@ import java.util.*;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-        char[][] board=
-                {{'5','3','.','.','7','.','.','.','.'}
-                        ,{'6','.','.','1','9','5','.','.','.'}
-                        ,{'.','9','8','.','.','.','.','6','.'}
-                        ,{'8','.','.','.','6','.','.','.','3'}
-                        ,{'4','.','.','8','.','3','.','.','1'}
-                        ,{'7','.','.','.','2','.','.','.','6'}
-                        ,{'.','6','.','.','.','.','2','8','.'}
-                        ,{'.','.','.','4','1','9','.','.','5'}
-                        ,{'.','.','.','.','8','.','.','7','9'}};
-        System.out.println("validSudoku : "+isValidSudoku(board));
+//        int[][] matrix= {{1,2,3},{4,5,6},{7,8,9}};
+        int[][] matrix= {{1,2,3,4},{5,6,7,8},{9,10,11,12}};
+
+        System.out.println("spiral : "+spiralOrder(matrix));
     }
-    public static boolean isValidSudoku(char[][] board) {
-        HashSet<String> seen = new HashSet<>();
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                char num = board[i][j];
-                if (num!='.'){
-                    if( !seen.add(num+" in row "+i) || !seen.add(num+" in col "+j) || !seen.add(num+" in box "+i/3+","+j/3) ){
-                        return false;
-                    }
-                }
-            }
+    public static List<Integer> spiralOrder(int[][] matrix) {
+        ArrayList<Integer> numbers = new ArrayList<>();
+        int left=0,right=matrix[0].length-1,
+                top=0,bottom=matrix.length-1;
+        while (left<=right && top<=bottom){
+            for (int i = left; i <=right; i++) {
+                numbers.add(matrix[top][i]);
+            }if (top==bottom) break;top++; //row terminate check
+
+            for (int i = top; i <=bottom; i++) {
+                numbers.add(matrix[i][right]);
+            }if (right==left) break;right--;//column terminate check
+
+            for (int i = right; i >=left ; i--) {
+                numbers.add(matrix[bottom][i]);
+            }bottom--;
+
+            for (int i = bottom; i >=top ; i--) {
+                numbers.add(matrix[i][left]);
+            }left++;
         }
-//        for (String entry :
-//                seen.stream().toList()) {
-//            System.out.println(entry);
-//        }
-        return true;
+        return numbers;
     }
 }
 
