@@ -3,32 +3,32 @@ import java.util.*;
 public class DummyClass1 {
     public static void main(String[] args) {
 //        int[][] matrix= {{1,2,3},{4,5,6},{7,8,9}};
-        int[][] matrix= {{1,2,3,4},{5,6,7,8},{9,10,11,12}};
-
-        System.out.println("spiral : "+spiralOrder(matrix));
+        int[][] matrix= {{5,1,9,11},{2,4,8,10},{13,3,6,7},{15,14,12,16}};
+        rotate(matrix);
+        System.out.println(Arrays.deepToString(matrix));
     }
-    public static List<Integer> spiralOrder(int[][] matrix) {
-        ArrayList<Integer> numbers = new ArrayList<>();
-        int left=0,right=matrix[0].length-1,
-                top=0,bottom=matrix.length-1;
-        while (left<=right && top<=bottom){
-            for (int i = left; i <=right; i++) {
-                numbers.add(matrix[top][i]);
-            }if (top==bottom) break;top++; //row terminate check
 
-            for (int i = top; i <=bottom; i++) {
-                numbers.add(matrix[i][right]);
-            }if (right==left) break;right--;//column terminate check
-
-            for (int i = right; i >=left ; i--) {
-                numbers.add(matrix[bottom][i]);
-            }bottom--;
-
-            for (int i = bottom; i >=top ; i--) {
-                numbers.add(matrix[i][left]);
-            }left++;
+    public static void rotate(int[][] matrix) {
+        int n = matrix.length-1;
+        //transpose
+        for (int i = 0; i <=n ; i++) {
+            for (int j = i; j <=n ; j++) {
+                int temp =matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
         }
-        return numbers;
+        //reverse rows
+        for (int row = 0; row <=n ; row++) {
+            int left=0,right=n;
+            while (left<right){
+                int temp = matrix[row][left];
+                matrix[row][left] = matrix[row][right];
+                matrix[row][right] = temp;
+
+                left++;right--;
+            }
+        }
     }
 }
 
