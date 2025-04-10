@@ -2,33 +2,37 @@ import java.util.*;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-//        int[][] matrix= {{1,2,3},{4,5,6},{7,8,9}};
-        int[][] matrix= {{5,1,9,11},{2,4,8,10},{13,3,6,7},{15,14,12,16}};
-        rotate(matrix);
+        int[][] matrix= {{1,1,1},{1,0,1},{1,1,1}};
+//        int[][] matrix= {{0,1,2,0},{3,4,5,2},{1,3,1,5}};
+        setZeroes(matrix);
         System.out.println(Arrays.deepToString(matrix));
     }
 
-    public static void rotate(int[][] matrix) {
-        int n = matrix.length-1;
-        //transpose
-        for (int i = 0; i <=n ; i++) {
-            for (int j = i; j <=n ; j++) {
-                int temp =matrix[i][j];
-                matrix[i][j] = matrix[j][i];
-                matrix[j][i] = temp;
+    public static void setZeroes(int[][] matrix) {
+        int m = matrix.length-1,n=matrix[0].length-1;
+        //map building and first row col pre-check for initial zeroes.
+        boolean firstCol=false,firstRow=false;
+        for (int i = 0 ;i <=m ; i++) {
+            for (int j = 0; j <=n ; j++) {
+                if (matrix[i][j]==0){
+                    if (i==0) firstRow=true;
+                    if (j==0) firstCol=true;
+                    matrix[0][j]=0;
+                    matrix[i][0]=0;
+                }
             }
         }
-        //reverse rows
-        for (int row = 0; row <=n ; row++) {
-            int left=0,right=n;
-            while (left<right){
-                int temp = matrix[row][left];
-                matrix[row][left] = matrix[row][right];
-                matrix[row][right] = temp;
-
-                left++;right--;
+        //inner matrix update
+        for (int i = 1 ;i <=m ; i++) {
+            for (int j = 1; j <=n ; j++) {
+                if (matrix[0][j]==0 || matrix[i][0]==0){
+                    matrix[i][j]=0;
+                }
             }
         }
+        //fix first row col
+        if (firstRow) for (int j = 0; j <=n ; j++) {matrix[0][j]=0;}
+        if (firstCol) for (int i = 0; i <=m ; i++) {matrix[i][0]=0;}
     }
 }
 
