@@ -2,37 +2,49 @@ import java.util.*;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-        int[][] matrix= {{1,1,1},{1,0,1},{1,1,1}};
-//        int[][] matrix= {{0,1,2,0},{3,4,5,2},{1,3,1,5}};
-        setZeroes(matrix);
-        System.out.println(Arrays.deepToString(matrix));
+//        int[][] board= {{0,1,0},{0,0,1},{1,1,1},{0,0,0}};
+        int[][] board= {{1,1},{1,0}};
+        gameOfLife(board);
+        System.out.println(Arrays.deepToString(board));
     }
 
-    public static void setZeroes(int[][] matrix) {
-        int m = matrix.length-1,n=matrix[0].length-1;
-        //map building and first row col pre-check for initial zeroes.
-        boolean firstCol=false,firstRow=false;
-        for (int i = 0 ;i <=m ; i++) {
+    public static void gameOfLife(int[][] board) {
+        int m= board.length-1,n=board[0].length-1;
+        for (int i = 0; i <=m ; i++) {
             for (int j = 0; j <=n ; j++) {
-                if (matrix[i][j]==0){
-                    if (i==0) firstRow=true;
-                    if (j==0) firstCol=true;
-                    matrix[0][j]=0;
-                    matrix[i][0]=0;
+                int live = getCount(i,j,board,m,n);
+                //currently live
+                if (board[i][j]==1){
+                    if (live< 2 || live>3) board[i][j] = 3;
+                }//currently dead
+                else if (board[i][j]==0){
+                    if (live==3) board[i][j] = 2;
                 }
             }
         }
-        //inner matrix update
-        for (int i = 1 ;i <=m ; i++) {
-            for (int j = 1; j <=n ; j++) {
-                if (matrix[0][j]==0 || matrix[i][0]==0){
-                    matrix[i][j]=0;
-                }
+        //Update with new states
+        for (int i = 0; i <=m ; i++) {
+            for (int j = 0; j <=n ; j++) {
+                if (board[i][j]==2){board[i][j]=1;}
+                else if(board[i][j]==3) board[i][j]=0;
             }
         }
-        //fix first row col
-        if (firstRow) for (int j = 0; j <=n ; j++) {matrix[0][j]=0;}
-        if (firstCol) for (int i = 0; i <=m ; i++) {matrix[i][0]=0;}
+    }
+    private static int getCount(int i,int j,int[][] board,int m,int n){
+        int live = 0;
+        if (j-1>=0 && ( board[i][j-1]==1 || board[i][j-1]==3) ) live++;
+
+        if (i-1>=0 && j-1>=0 && (board[i-1][j-1]==1 || board[i-1][j-1]==3)) live++;
+        if (i-1>=0 && (board[i-1][j]==1 || board[i-1][j]==3)) live++;
+        if (i-1>=0 && j+1<=n && (board[i-1][j+1]==1 ||board[i-1][j+1]==3)) live++;
+
+        if (j+1<=n && (board[i][j+1]==1||board[i][j+1]==3)) live++;
+
+        if (i+1<=m && j+1<=n && (board[i+1][j+1]==1 || board[i+1][j+1]==3)) live++;
+        if (i+1<=m && (board[i+1][j]==1 || board[i+1][j]==3)) live++;
+        if (i+1<=m && j-1>=0 && (board[i+1][j-1]==1 || board[i+1][j-1]==3)) live++;
+
+        return live;
     }
 }
 
