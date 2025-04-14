@@ -2,49 +2,118 @@ import java.util.*;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-//        int[][] board= {{0,1,0},{0,0,1},{1,1,1},{0,0,0}};
-        int[][] board= {{1,1},{1,0}};
-        gameOfLife(board);
-        System.out.println(Arrays.deepToString(board));
+//        String s = "ADOBECODEBANC", t = "ABC";
+//        String s = "a", t = "a";
+//        String s = "ab", t = "a";
+//        String s = "a", t = "aa";
+//        String s = "bba", t = "ab";
+        String s = "cabwefgewcwaefgcf", t = "cae";
+//        String s = "fgewcwaefgcf", t = "cae";
+//        String s = "aaaaaaaaaaaabbbbbcdd", t = "abcdd";
+//        String s = "aaaabbbbbcdd", t = "abcdd";
+//
+        String substring = minWindow2(s, t);
+        System.out.println("substring : " + substring);
     }
 
-    public static void gameOfLife(int[][] board) {
-        int m= board.length-1,n=board[0].length-1;
-        for (int i = 0; i <=m ; i++) {
-            for (int j = 0; j <=n ; j++) {
-                int live = getCount(i,j,board,m,n);
-                //currently live
-                if (board[i][j]==1){
-                    if (live< 2 || live>3) board[i][j] = 3;
-                }//currently dead
-                else if (board[i][j]==0){
-                    if (live==3) board[i][j] = 2;
+    public static String minWindow2(String s, String t) {
+        HashMap<Character,Integer> tmap = new HashMap<>(),smap = new HashMap<>();
+        for (Character ch : t.toCharArray()) {
+            tmap.put(ch, tmap.getOrDefault(ch,0)+1);
+            smap.putIfAbsent(ch,0);
+        }
+
+        int length = Integer.MAX_VALUE,count=0;
+        int left=0,right=0;        int start = 0,end=0;
+        while (right<s.length()){
+            while (right<s.length() && count <tmap.size()){
+                Character letter = s.charAt(right);
+                if (tmap.containsKey(letter) ){
+                    if (smap.get(letter)<tmap.get(letter)){
+                        smap.put(letter,smap.get(letter)+1);
+                        if (smap.get(letter)>=tmap.get(letter))
+                            count++;
+                    }
+                    else
+                        smap.put(letter,smap.get(letter)+1);
                 }
+                if (count<tmap.size()) right++;
             }
-        }
-        //Update with new states
-        for (int i = 0; i <=m ; i++) {
-            for (int j = 0; j <=n ; j++) {
-                if (board[i][j]==2){board[i][j]=1;}
-                else if(board[i][j]==3) board[i][j]=0;
+            if (right==s.length()) break;
+
+
+            while ( count==tmap.size()){
+                Character letter = s.charAt(left);
+                if (tmap.containsKey(letter)){
+                    smap.put(letter,smap.get(letter)-1);
+                    if (smap.get(letter)< tmap.get(letter))
+                        count--;
+                }
+                if (count==tmap.size()) left++;
             }
+
+
+            int newLength = right - left + 1;
+            if (newLength<length){
+                length = newLength;
+                start = left;
+                end = start+length;
+            }
+
+            right++;left++;
         }
+
+        return s.substring(start,end);
     }
-    private static int getCount(int i,int j,int[][] board,int m,int n){
-        int live = 0;
-        if (j-1>=0 && ( board[i][j-1]==1 || board[i][j-1]==3) ) live++;
 
-        if (i-1>=0 && j-1>=0 && (board[i-1][j-1]==1 || board[i-1][j-1]==3)) live++;
-        if (i-1>=0 && (board[i-1][j]==1 || board[i-1][j]==3)) live++;
-        if (i-1>=0 && j+1<=n && (board[i-1][j+1]==1 ||board[i-1][j+1]==3)) live++;
+    //TLE- 265/268 passed
+    public static String minWindow1(String s, String t) {
+        HashMap<Character, Integer> tmap = new HashMap<>(), smap = new HashMap<>();
+        for (Character ch : t.toCharArray()) {
+            tmap.put(ch, tmap.getOrDefault(ch, 0) + 1);
+            smap.putIfAbsent(ch, 0);
+        }
 
-        if (j+1<=n && (board[i][j+1]==1||board[i][j+1]==3)) live++;
+        int length = Integer.MAX_VALUE, count = 0;
+        int left = 0, right = 0;
+        int start = 0, end = 0;
+        while (right < s.length()) {
+            while (right < s.length() && count < tmap.size()) {
+                Character letter = s.charAt(right);
+                if (tmap.containsKey(letter)) {
+                    if (smap.get(letter) < tmap.get(letter)) {
+                        smap.put(letter, smap.get(letter) + 1);
+                        if (smap.get(letter) >= tmap.get(letter))
+                            count++;
+                    } else
+                        smap.put(letter, smap.get(letter) + 1);
+                }
+                if (count < tmap.size()) right++;
+            }
+            if (right == s.length()) break;
 
-        if (i+1<=m && j+1<=n && (board[i+1][j+1]==1 || board[i+1][j+1]==3)) live++;
-        if (i+1<=m && (board[i+1][j]==1 || board[i+1][j]==3)) live++;
-        if (i+1<=m && j-1>=0 && (board[i+1][j-1]==1 || board[i+1][j-1]==3)) live++;
+            while (left < s.length() && count == tmap.size()) {
+                Character letter = s.charAt(left);
+                if (tmap.containsKey(letter)) {
+                    smap.put(letter, smap.get(letter) - 1);
+                    if (smap.get(letter) < tmap.get(letter))
+                        count--;
+                }
+                if (count == tmap.size()) left++;
+            }
 
-        return live;
+            int newLength = right - left + 1;
+            if (newLength < length) {
+                length = newLength;
+                start = left;
+                end = start + length;
+            }
+
+            right++;
+            left++;
+        }
+
+        return s.substring(start, end);
     }
 }
 
