@@ -6,8 +6,26 @@ public class DummyClass1 {
 //        String s = "paper", t = "title";
 //        String s = "eggs", t = "addd";
 //        String s = "foo", t = "bar";
-        String s = "badc", t = "baba";
-        System.out.println("isIsomorphic : " + isIsomorphic(s,t));
+//        String pattern = "abba", s = "dog cat cat dog";
+//        String pattern = "aaaa", s = "dog cat cat cat";
+        String pattern = "aaa", s = "aa aa aa aa";
+        System.out.println("wordPattern : " + wordPattern(pattern,s));
+    }
+    public static boolean wordPattern(String pattern, String s) {
+        String[] words = s.split(" ");
+        if (pattern.length()!= words.length) return false;
+        HashMap<Character,String> patternMap = new HashMap<>();
+        HashSet<String> wordSet = new HashSet<>();
+        for (int i = 0; i < pattern.length(); i++) {
+            char pSymbol = pattern.charAt(i);
+            String sWord = words[i];
+            if (!patternMap.containsKey(pSymbol)){
+                patternMap.put(pSymbol,sWord);
+                if (wordSet.contains(sWord)) return false;
+                wordSet.add(sWord);
+            } else if (!sWord.equals(patternMap.get(pSymbol))) return false;
+        }
+        return true;
     }
 
     public static boolean isIsomorphic(String s, String t) {
