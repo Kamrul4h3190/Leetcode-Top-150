@@ -2,18 +2,27 @@ import java.util.*;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-//        int[] nums = {1,2,3,1}; int k = 3;
-        int[] nums = {1,2,3,1,2,3}; int k = 2;
-        System.out.println(containsNearbyDuplicate(nums,k));
+        int[] nums = {4,0,-4,-2,2,5,2,0,-8,-8,-8,-8,-1,7,4,5,5,-4,6,6,-3};
+//        int[] nums = {0,3,7,2,5,8,4,6,0,1};
+//        int[] nums = {1,0,1,2};
+        System.out.println("largest length: "+longestConsecutive(nums));
     }
-    public static boolean containsNearbyDuplicate(int[] nums, int k) {
-        HashMap<Integer,Integer> indicesMap = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            int n = nums[i];
-            if (indicesMap.containsKey(n) && i- indicesMap.get(n)<=k) return true;
-            indicesMap.put(n,i);
+    public static int longestConsecutive(int[] nums) {
+        int len = 0;
+        HashSet<Integer> numSet = new HashSet<>();
+        for (int num : nums) {numSet.add(num);}
+
+        for (int num : numSet) {
+            if (! numSet.contains(num - 1)){
+                int currLen = 1;
+                while (numSet.contains(num+1)){
+                    currLen++;
+                    num++;
+                }
+                if (currLen>len) len = currLen;
+            }
         }
-        return false;
+        return len;
     }
 
 }
