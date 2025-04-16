@@ -2,49 +2,34 @@ import java.util.*;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-//        String[] strs = {"eat","tea","tan","ate","nat","bat"};
-        String[] strs = {"cab","tin","pew","duh","may","ill","buy","bar","max","doc"};
-        //[["max"],["buy"],["doc"],["may"],["ill"],["duh"],["tin"],["bar"],["pew"],["cab"]]
-        List<List<String>> groups = groupAnagrams(strs);
-        System.out.println(groups);
+//        int[] nums = {2,7,11,15};int target = 9;
+        int[] nums = {3,2,4};int target = 6;
+        int[] indices = twoSum2(nums,target);
+        System.out.println(Arrays.toString(indices));
     }
-    public static List<List<String>> groupAnagrams2(String[] strs) {
-        HashMap<String,List<String>> groupMap = new HashMap<>();
-        for (String word : strs) {
-            String key = generateKey(word);
-
-            if (!groupMap.containsKey(key)) {
-                groupMap.put(key, new ArrayList<>());;
+    public static int[] twoSum2(int[] nums, int target) {
+        HashMap<Integer,Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int a = nums[i];
+            int b = target - a;
+            if (indexMap.containsKey(b) ){//i auto increasing , no need same place occurrence check
+                return new int[]{i, indexMap.get(b)};
             }
-            groupMap.get(key).add(word);
+            indexMap.putIfAbsent(a,i);
         }
-        return  new ArrayList<>(groupMap.values()) ;
+        return new int[]{};
     }
-    public static List<List<String>> groupAnagrams(String[] strs) {
-        HashMap<String,List<String>> groupMap = new HashMap<>();
-        for (String word : strs) {
-            char[] letters = word.toCharArray();Arrays.sort(letters);
-            String key = new String(letters);
-            if (!groupMap.containsKey(key)) {
-                groupMap.put(key, new ArrayList<>());;
+    public static int[] twoSum(int[] nums, int target) {
+        HashMap<Integer,Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {indexMap.put(nums[i],i );}
+        for (int i = 0; i < nums.length; i++) {
+            int a = nums[i];
+            int b = target - a;
+            if (indexMap.containsKey(b) && indexMap.get(b)!=i ){
+                return new int[]{i, indexMap.get(b)};
             }
-            groupMap.get(key).add(word);
         }
-        return  new ArrayList<>(groupMap.values()) ;
-    }
-
-    private static String generateKey(String word){
-        int[] freqCount = new int[26];
-        for (char letter : word.toCharArray()) {
-            freqCount[letter-'a']++;
-        }
-
-        StringBuilder key = new StringBuilder();
-        for (int j : freqCount) {
-            if (j != 0) key.append(Arrays.toString(freqCount));
-            else key.append("*");
-        }
-        return key.toString();
+        return new int[]{};
     }
 
 }
