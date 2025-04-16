@@ -2,34 +2,24 @@ import java.util.*;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-//        int[] nums = {2,7,11,15};int target = 9;
-        int[] nums = {3,2,4};int target = 6;
-        int[] indices = twoSum2(nums,target);
-        System.out.println(Arrays.toString(indices));
+//        int n = 326;
+        int n = 2;
+        System.out.println(isHappy(n));
     }
-    public static int[] twoSum2(int[] nums, int target) {
-        HashMap<Integer,Integer> indexMap = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            int a = nums[i];
-            int b = target - a;
-            if (indexMap.containsKey(b) ){//i auto increasing , no need same place occurrence check
-                return new int[]{i, indexMap.get(b)};
+    public static boolean isHappy(int n) {
+        HashSet<Integer> sumset = new HashSet<>();
+        while (n!=1 && !sumset.contains(n)){
+            sumset.add(n);
+            int sum=0,digit;
+            while (n>0){
+                digit = n%10;
+                sum+= digit*digit;
+                n/=10;
             }
-            indexMap.putIfAbsent(a,i);
+            n=sum;
+//            System.out.println(n);
         }
-        return new int[]{};
-    }
-    public static int[] twoSum(int[] nums, int target) {
-        HashMap<Integer,Integer> indexMap = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {indexMap.put(nums[i],i );}
-        for (int i = 0; i < nums.length; i++) {
-            int a = nums[i];
-            int b = target - a;
-            if (indexMap.containsKey(b) && indexMap.get(b)!=i ){
-                return new int[]{i, indexMap.get(b)};
-            }
-        }
-        return new int[]{};
+        return n==1;
     }
 
 }
