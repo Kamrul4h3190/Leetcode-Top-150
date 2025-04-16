@@ -2,24 +2,18 @@ import java.util.*;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-//        int n = 326;
-        int n = 2;
-        System.out.println(isHappy(n));
+//        int[] nums = {1,2,3,1}; int k = 3;
+        int[] nums = {1,2,3,1,2,3}; int k = 2;
+        System.out.println(containsNearbyDuplicate(nums,k));
     }
-    public static boolean isHappy(int n) {
-        HashSet<Integer> sumset = new HashSet<>();
-        while (n!=1 && !sumset.contains(n)){
-            sumset.add(n);
-            int sum=0,digit;
-            while (n>0){
-                digit = n%10;
-                sum+= digit*digit;
-                n/=10;
-            }
-            n=sum;
-//            System.out.println(n);
+    public static boolean containsNearbyDuplicate(int[] nums, int k) {
+        HashMap<Integer,Integer> indicesMap = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int n = nums[i];
+            if (indicesMap.containsKey(n) && i- indicesMap.get(n)<=k) return true;
+            indicesMap.put(n,i);
         }
-        return n==1;
+        return false;
     }
 
 }
