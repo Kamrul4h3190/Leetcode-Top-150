@@ -2,26 +2,42 @@ import java.util.*;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-//        int[] nums = {0,1,2,4,5,7};
-        int[] nums = {0,2,3,4,6,8,9};
-        System.out.println(summaryRanges(nums));
+        int[][] intervals = {{1,3},{2,6},{8,10},{15,18}};
+        System.out.println(Arrays.deepToString(merge2(intervals)));
     }
-    public static List<String> summaryRanges(int[] nums) {
-        List<String> ranges = new ArrayList<>();
-        int i =0,j= 0;
-        while (j<= nums.length-1){
-            StringBuilder range = new StringBuilder();
-            if (j== nums.length-1 || nums[j+1]>nums[j]+1){
-                if (j==i) range.append(nums[j]);
-                else range.append(nums[i]+"->"+nums[j]);
-                ranges.add(range.toString());
-                range.setLength(0);
-                i=j+1;
+    //beats 81 %
+    public static int[][] merge2(int[][] intervals) {
+        Arrays.sort(intervals, (a, b) -> (a[0] - b[0]));
+        ArrayList<int[]> mergedIntervals = new ArrayList<>();
+        int[] prevInterval = intervals[0];
+        for (int[] currentInterval : intervals) {
+            if (currentInterval[0] <= prevInterval[1]){
+                prevInterval[1] = Math.max(prevInterval[1],currentInterval[1]);
             }
-            j++;
+            else{
+                mergedIntervals.add(prevInterval);
+                prevInterval = currentInterval;
+            }
         }
-        return ranges;
+        mergedIntervals.add(prevInterval); //last interval
+
+        return mergedIntervals.toArray(new int[mergedIntervals.size()][2]);//transforming the 2d arraylist explicitly requires to provide the size.
+    }
+    //beats 97 %
+    public static int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, (a, b) -> (a[0] - b[0]));
+        ArrayList<int[]> mergedIntervals = new ArrayList<>();
+        int start = intervals[0][0],end = intervals[0][1];
+        for (int[] interval : intervals) {
+            if (interval[0] > end){
+                mergedIntervals.add(new int[]{start,end});
+                start = interval[0];end = interval[1];
+            }
+            else end = Math.max(end,interval[1]);
+        }
+        mergedIntervals.add(new int[]{start,end}); //last interval
+
+        return mergedIntervals.toArray(new int[mergedIntervals.size()][2]);//transforming the 2d arraylist explicitly requires to provide the size.
     }
 
 }
-
