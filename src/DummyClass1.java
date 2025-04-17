@@ -2,27 +2,25 @@ import java.util.*;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-        int[] nums = {4,0,-4,-2,2,5,2,0,-8,-8,-8,-8,-1,7,4,5,5,-4,6,6,-3};
-//        int[] nums = {0,3,7,2,5,8,4,6,0,1};
-//        int[] nums = {1,0,1,2};
-        System.out.println("largest length: "+longestConsecutive(nums));
+//        int[] nums = {0,1,2,4,5,7};
+        int[] nums = {0,2,3,4,6,8,9};
+        System.out.println(summaryRanges(nums));
     }
-    public static int longestConsecutive(int[] nums) {
-        int len = 0;
-        HashSet<Integer> numSet = new HashSet<>();
-        for (int num : nums) {numSet.add(num);}
-
-        for (int num : numSet) {
-            if (! numSet.contains(num - 1)){
-                int currLen = 1;
-                while (numSet.contains(num+1)){
-                    currLen++;
-                    num++;
-                }
-                if (currLen>len) len = currLen;
+    public static List<String> summaryRanges(int[] nums) {
+        List<String> ranges = new ArrayList<>();
+        int i =0,j= 0;
+        while (j<= nums.length-1){
+            StringBuilder range = new StringBuilder();
+            if (j== nums.length-1 || nums[j+1]>nums[j]+1){
+                if (j==i) range.append(nums[j]);
+                else range.append(nums[i]+"->"+nums[j]);
+                ranges.add(range.toString());
+                range.setLength(0);
+                i=j+1;
             }
+            j++;
         }
-        return len;
+        return ranges;
     }
 
 }
