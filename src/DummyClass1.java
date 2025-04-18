@@ -2,30 +2,46 @@ import java.util.*;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-        int[][] intervals = {{1,3},{2,6},{8,10},{15,18}};
-        System.out.println(Arrays.deepToString(merge2(intervals)));
+//        int[][] intervals = {{1,3},{6,9}}; int[] newInterval = {2,5};
+//        int[][] intervals = {}; int[] newInterval = {5,7};
+//        int[][] intervals ={{1,5}}; int[] newInterval = {2,7};
+        int[][] intervals ={{1,5}}; int[] newInterval = {1,7};
+//        System.out.println(Arrays.deepToString(merge(intervals)));
+        System.out.println(Arrays.deepToString(insert2(intervals,newInterval)));
     }
-    //beats 81 %
-    public static int[][] merge2(int[][] intervals) {
-        Arrays.sort(intervals, (a, b) -> (a[0] - b[0]));
-        ArrayList<int[]> mergedIntervals = new ArrayList<>();
-        int[] prevInterval = intervals[0];
-        for (int[] currentInterval : intervals) {
-            if (currentInterval[0] <= prevInterval[1]){
-                prevInterval[1] = Math.max(prevInterval[1],currentInterval[1]);
-            }
-            else{
-                mergedIntervals.add(prevInterval);
-                prevInterval = currentInterval;
-            }
-        }
-        mergedIntervals.add(prevInterval); //last interval
+    public static int[][] insert2(int[][] intervals, int[] newInterval) {
+        ArrayList<int[]> updatedIntervals = new ArrayList<>();
+        int i=0;
+        while (i<intervals.length && intervals[i][1]<newInterval[0]){updatedIntervals.add(intervals[i]);i++;}
 
-        return mergedIntervals.toArray(new int[mergedIntervals.size()][2]);//transforming the 2d arraylist explicitly requires to provide the size.
+        while (i<intervals.length && intervals[i][0]<=newInterval[1]){
+            newInterval[0] = Math.min(intervals[i][0],newInterval[0]);
+            newInterval[1] = Math.max(intervals[i][1],newInterval[1]);
+            i++;
+        }updatedIntervals.add(newInterval);
+
+        while (i<intervals.length){updatedIntervals.add(intervals[i]);i++;}
+
+        return updatedIntervals.toArray(new int[0][]);
     }
-    //beats 97 %
+    public static int[][] insert(int[][] intervals, int[] newInterval) {
+        ArrayList<int[]> updatedIntervals = new ArrayList<>();
+        int i;
+        for ( i = 0; i < intervals.length; i++) {
+            if (intervals[i][0]<=newInterval[0])updatedIntervals.add(intervals[i]);
+            else {updatedIntervals.add(newInterval); break;}
+        }if (intervals.length==0) updatedIntervals.add(newInterval);
+        if (updatedIntervals.get(updatedIntervals.size()-1)[0]<=newInterval[0])
+            updatedIntervals.add(newInterval);
+        while (i<intervals.length) {updatedIntervals.add(intervals[i]);i++;}
+
+        int[][] intervals2 = updatedIntervals.toArray(new int[0][]);
+
+        return merge(intervals2);
+    }
+
     public static int[][] merge(int[][] intervals) {
-        Arrays.sort(intervals, (a, b) -> (a[0] - b[0]));
+//        Arrays.sort(intervals, (a, b) -> (a[0] - b[0]));
         ArrayList<int[]> mergedIntervals = new ArrayList<>();
         int start = intervals[0][0],end = intervals[0][1];
         for (int[] interval : intervals) {
