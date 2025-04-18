@@ -1,59 +1,26 @@
 import java.util.*;
 
+import static java.lang.Integer.compare;
+
 public class DummyClass1 {
     public static void main(String[] args) {
-//        int[][] intervals = {{1,3},{6,9}}; int[] newInterval = {2,5};
-//        int[][] intervals = {}; int[] newInterval = {5,7};
-//        int[][] intervals ={{1,5}}; int[] newInterval = {2,7};
-        int[][] intervals ={{1,5}}; int[] newInterval = {1,7};
-//        System.out.println(Arrays.deepToString(merge(intervals)));
-        System.out.println(Arrays.deepToString(insert2(intervals,newInterval)));
+        int[][] points = {{10,16},{2,8},{1,6},{7,12}};
+//        int[][] points = {{-46,-45},{46,47}};
+//        int[][] points = {{-2147483646,-2147483645},{2147483646,2147483647}};
+//        int[][] points = {{3,9},{7,12},{3,8},{6,8},{9,10},{2,9},{3,9},{0,6},{2,8}};
+        System.out.println("arrows : "+findMinArrowShots(points));
     }
-    public static int[][] insert2(int[][] intervals, int[] newInterval) {
-        ArrayList<int[]> updatedIntervals = new ArrayList<>();
-        int i=0;
-        while (i<intervals.length && intervals[i][1]<newInterval[0]){updatedIntervals.add(intervals[i]);i++;}
+    public static int findMinArrowShots(int[][] points) {
+        if (points.length<=1) return points.length;
+        Arrays.sort(points,(a,b)->Integer.compare(a[1],b[1]));
 
-        while (i<intervals.length && intervals[i][0]<=newInterval[1]){
-            newInterval[0] = Math.min(intervals[i][0],newInterval[0]);
-            newInterval[1] = Math.max(intervals[i][1],newInterval[1]);
-            i++;
-        }updatedIntervals.add(newInterval);
-
-        while (i<intervals.length){updatedIntervals.add(intervals[i]);i++;}
-
-        return updatedIntervals.toArray(new int[0][]);
-    }
-    public static int[][] insert(int[][] intervals, int[] newInterval) {
-        ArrayList<int[]> updatedIntervals = new ArrayList<>();
-        int i;
-        for ( i = 0; i < intervals.length; i++) {
-            if (intervals[i][0]<=newInterval[0])updatedIntervals.add(intervals[i]);
-            else {updatedIntervals.add(newInterval); break;}
-        }if (intervals.length==0) updatedIntervals.add(newInterval);
-        if (updatedIntervals.get(updatedIntervals.size()-1)[0]<=newInterval[0])
-            updatedIntervals.add(newInterval);
-        while (i<intervals.length) {updatedIntervals.add(intervals[i]);i++;}
-
-        int[][] intervals2 = updatedIntervals.toArray(new int[0][]);
-
-        return merge(intervals2);
-    }
-
-    public static int[][] merge(int[][] intervals) {
-//        Arrays.sort(intervals, (a, b) -> (a[0] - b[0]));
-        ArrayList<int[]> mergedIntervals = new ArrayList<>();
-        int start = intervals[0][0],end = intervals[0][1];
-        for (int[] interval : intervals) {
-            if (interval[0] > end){
-                mergedIntervals.add(new int[]{start,end});
-                start = interval[0];end = interval[1];
+        int arrows = 1,boundary = points[0][1];
+        for (int i = 1; i < points.length ; i++) {
+            if(points[i][0]>boundary){
+                arrows++;boundary=points[i][1];
             }
-            else end = Math.max(end,interval[1]);
         }
-        mergedIntervals.add(new int[]{start,end}); //last interval
-
-        return mergedIntervals.toArray(new int[mergedIntervals.size()][2]);//transforming the 2d arraylist explicitly requires to provide the size.
+        return arrows;
     }
 
 }
