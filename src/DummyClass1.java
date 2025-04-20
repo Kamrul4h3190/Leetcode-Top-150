@@ -4,33 +4,24 @@ import static java.lang.Integer.compare;
 
 public class DummyClass1 {
     public static void main(String[] args) {
-//        String s = "()[]{}";
-//        String s = "(]";
-//        String s = "([])";
-        String s = "))";
-        System.out.println("valid parentheses : "+isValid(s));
+//        String path = "/home///user/./desktop/../movies";
+//        String path = "/home///foo";
+        String path = "/.../a/../b/c/../d/./";
+        System.out.println("simple path : "+simplifyPath(path));
     }
-    public static boolean isValid(String s) {
-        int n = s.length();if (n%2 != 0 ) return false;
-
-        Stack<Character> stack = new Stack<>();
-        for (char c : s.toCharArray()) {
-            if (c=='(' || c=='{' || c=='[') stack.push(c);
-            else if (!stack.isEmpty()){
-                switch (c){
-                    case ')': if (stack.peek()!='(')
-                        return false;break;
-                    case '}': if (stack.peek()!='{')
-                        return false;break;
-                    case ']': if (stack.peek()!='[')
-                        return false;break;
-                }
+    public static String simplifyPath(String path) {
+        String[] directories = path.split("/");
+        Stack<String> stack = new Stack<>();
+        for (String directory : directories) {
+            if (!directory.isEmpty() && !directory.equals(".") && !directory.equals(".."))
+                stack.push(directory);
+            else if (!stack.isEmpty() && directory.equals(".."))
                 stack.pop();
-            }
-            else return false;
         }
+        StringBuilder simplePath = new StringBuilder();
+        for (String directory : stack) simplePath.append("/").append(directory);
 
-        return stack.isEmpty();
+        return simplePath.isEmpty() ? "/":simplePath.toString();
     }
 
 }
