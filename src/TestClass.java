@@ -5,58 +5,35 @@ import java.util.Stack;
 
 public class TestClass {
     public static void main(String[] args) {
-//        String[] tokens = {"2","1","+","3","*"};
-//        String[] tokens = {"4","13","5","/","+"};
-        String[] tokens = {"10","6","9","3","+","-11","*","/","*","17","+","5","+"};
-        System.out.println("value : "+evalRPN2(tokens));
+        String s = "(1+(4+5+2)-3)+(6+8)";
+        System.out.println("value : "+calculate(s));
     }
-    //beats 74%
-    public static int evalRPN2(String[] tokens) {
-        HashSet<String> operators = new HashSet<>(Arrays.asList("+", "-", "*","/"));
+    public static int calculate(String s) {
+        int res=0,num=0,sign=1;
+        Stack<Integer> stack = new Stack<>();
+        for (char c : s.toCharArray()) {
+            if (Character.isDigit(c)){
+                num = 10*num + (c-'0');
+            } else if (c=='+') {
+                res += num*sign;
+                num=0;sign=1;
+            }else if (c=='-') {
+                res += num*sign;
+                num=0;sign=-1;
+            }else if (c=='(') {
+                stack.push(res);stack.push(sign);
+                res=0;num=0;sign=1;
+            } else if (c==')') {
+                res += num*sign;
+                res *= stack.pop(); //sign outside the parentheses
 
-        Stack<String> operands = new Stack<>();
-        for (String token : tokens) {
-            if (!operators.contains(token)) operands.push(token);
-            else {
-                int result=0;
-                int num2=Integer.parseInt(operands.pop());
-                int num1=Integer.parseInt(operands.pop());
-                if (token.equals("+")) {
-                    result = num1 + num2;
-                } else if (token.equals("-")) {
-                    result = num1 - num2;
-                } else if (token.equals("*")) {
-                    result = num1 * num2;
-                } else if (token.equals("/")) {
-                    result = num1 / num2;
-                }
-                operands.push(Integer.toString(result));
+                res+=stack.pop();
+                num=0;sign=1;
             }
         }
-        return Integer.parseInt(operands.peek());
+        res+=num*sign;
+        return res;
     }
 
-    //beats 27%
-    public static int evalRPN(String[] tokens) {
-        HashSet<String> operators = new HashSet<>(Arrays.asList("+", "-", "*","/"));
-
-        Stack<String> operands = new Stack<>();
-        for (String token : tokens) {
-            if (!operators.contains(token)) operands.push(token);
-            else {
-                int result=0;
-                int num2=Integer.parseInt(operands.pop());
-                int num1=Integer.parseInt(operands.pop());
-                switch (token) {
-                    case "+" -> result = num1 + num2;
-                    case "-" -> result = num1 - num2;
-                    case "*" -> result = num1 * num2;
-                    case "/" -> result = num1 / num2;
-                }
-                operands.push(Integer.toString(result));
-            }
-        }
-        return Integer.parseInt(operands.peek());
-    }
 }
 
