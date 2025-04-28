@@ -3,29 +3,27 @@ import java.util.List;
 
 public class TestClass {
     public static void main(String[] args) {
-        int[] nodes = {1,2,3,4,5}; int n = 2;
-//        int[] nodes = {1}; int n = 1;
-//        int[] nodes = {1,2}; int n = 2;
+        int[] nodes = {1,2,3,3,4,4,5};
         ListNode head = new ListNode(nodes[0]); ListNode tail = head;
         buildList(nodes, tail);
-        head = removeNthFromEnd(head,n);
-        printList(head); //after built the list
+        head = deleteDuplicates(head);
+        printList(head);
     }
-    public static ListNode removeNthFromEnd(ListNode head, int n) {
-        if (head.next == null) return null;
-        ListNode left = head,right=head;
-        for (int i = 1; i <=n ; i++) {
-            right = right.next;
-        }
-        if(right==null) return head.next; //n=size
-        while (right.next!=null) {
-            left = left.next;
-            right = right.next;
+    public static ListNode deleteDuplicates(ListNode head) {
+        if (head == null || head.next == null) return head;
+        ListNode dummyNode = new ListNode(-1,head);
+        ListNode prev = dummyNode,curr = head;
+        while (curr!=null){
+            if (curr.next!=null && curr.next.val == curr.val){
+                while (curr.next!=null && curr.next.val == curr.val) curr = curr.next;
+                prev.next = curr.next;
+            }
+            else prev = prev.next;
+
+            curr = curr.next;
         }
 
-        left.next = left.next.next;
-
-        return head;
+        return dummyNode.next;
     }
 
     public static void buildList (int[] nums, ListNode tail){ //basic list builder function **
