@@ -3,38 +3,31 @@ import java.util.List;
 
 public class TestClass {
     public static void main(String[] args) {
-//        int[] nodes = {3,1,2,4,5,6,7}; int left = 3,right = 5;
-//        int[] nodes = {3,1,2,4,5}; int left = 3,right = 5;
-        int[] nodes = {1,2,4}; int left = 1,right = 3;
+        int[] nodes = {1,2,3,4,5}; int n = 2;
+//        int[] nodes = {1}; int n = 1;
+//        int[] nodes = {1,2}; int n = 2;
         ListNode head = new ListNode(nodes[0]); ListNode tail = head;
         buildList(nodes, tail);
-        head = reverseBetween(head,left,right);
+        head = removeNthFromEnd(head,n);
         printList(head); //after built the list
     }
-
-    public static ListNode reverseBetween(ListNode head, int left, int right) {
-        if (head.next == null || left==right) return head;
-        ListNode dummyNode = new ListNode();    dummyNode.next = head;
-        ListNode leftBeforeNode = dummyNode;
-        int i = 1;
-        while (i < left) {
-            leftBeforeNode = leftBeforeNode.next; i++;
+    public static ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head.next == null) return null;
+        ListNode left = head,right=head;
+        for (int i = 1; i <=n ; i++) {
+            right = right.next;
         }
-        ListNode leftNode =  leftBeforeNode.next,rightNode = null;
-        ListNode prev = leftNode,curr = prev.next,next = curr.next;
-        while (i<=right){
-            i++;
-            curr.next = prev;
-            if (i==right){rightNode = curr;break;}
-            prev = curr;
-            curr = next;
-            next = next.next;
+        if(right==null) return head.next; //n=size
+        while (right.next!=null) {
+            left = left.next;
+            right = right.next;
         }
-        leftBeforeNode.next = curr;
-        leftNode.next = next;
 
-        return dummyNode.next;
+        left.next = left.next.next;
+
+        return head;
     }
+
     public static void buildList (int[] nums, ListNode tail){ //basic list builder function **
         for (int i = 1; i < nums.length ; i++) {
             tail.next = new ListNode(nums[i]);
