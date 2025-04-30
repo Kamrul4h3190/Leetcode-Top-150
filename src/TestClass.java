@@ -3,60 +3,62 @@ import java.util.List;
 
 public class TestClass {
     public static void main(String[] args) {
-        int[] nodes = {1,2,3,4,5}; int k = 5;
-//        int[] nodes = {0,1,2}; int k = 4;
-//        int[] nodes = {1,2,3}; int k = 2000000000;
+        int[] nodes = {1,4,3,2,5,2}; int x = 3;
         ListNode head = new ListNode(nodes[0]); ListNode tail = head;
         buildList(nodes, tail);
-        head = rotateRight2(head,k);
+        head = partition2(head,x);
         printList(head);
     }
-    public static ListNode rotateRight2(ListNode head, int k) {
-        if(head==null || head.next ==null || k==0) return head;
-        ListNode dummyNode = new ListNode(-1,head);
-        ListNode left = dummyNode,right = dummyNode;
+    public static ListNode partition2(ListNode head, int x) {
+        ListNode smallerList = new ListNode(),largerList = new ListNode();
+        ListNode tailsmall = smallerList,tailLarge = largerList;
+        while (head!=null){
+            if (head.val < x){
+                tailsmall.next = new ListNode(head.val,null);
+//                tailsmall.next = head;
+                tailsmall = tailsmall.next;
+            }else {
+                tailLarge.next = new ListNode(head.val,null);
+//                tailLarge.next = head;
+                tailLarge = tailLarge.next;
+            }
 
-        int len = 1;ListNode curr = head;
-        while (curr.next!=null){curr = curr.next;len++;}
-
-        k = k%len; if (k==0) return head;
-
-        for (int i = 1; i <=k ; i++) {right = right.next;}
-        if (right.next==null) return head;
-
-        while (right.next!=null){
-            left = left.next;
-            right = right.next;
+            head = head.next;
         }
 
-        right.next = dummyNode.next;
-        dummyNode.next = left.next;
-        left.next = null;
-        return dummyNode.next;
+        tailsmall.next = largerList.next;
+//        tailLarge.next = null;
+
+        return smallerList.next;
     }
-    public static ListNode rotateRight(ListNode head, int k) {
-        if(head==null || head.next ==null || k==0) return head;
-        ListNode dummyNode = new ListNode(-1,head);
-        ListNode left = dummyNode,right = dummyNode;
-        for (int i = 1; i <=k ; i++) {
-            right = right.next;
-            if (right==null) right = dummyNode.next; //cycle here, Time complexity becomes O(K).
-        }
-        if (right.next==null) return head;
+    public static ListNode partition(ListNode head, int x) {
+        ListNode smallerList = new ListNode(),largerList = new ListNode();
+        ListNode tailsmall = smallerList,tailLarge = largerList;
+        while (head!=null){
+            if (head.val < x){
+//                tailsmall.next = new ListNode(head.val,null);
+                tailsmall.next = head;
+                tailsmall = tailsmall.next;
+            }else {
+//                tailLarge.next = new ListNode(head.val,null);
+                tailLarge.next = head;
+                tailLarge = tailLarge.next;
+            }
 
-        while (right.next!=null){
-            left = left.next;
-            right = right.next;
+            head = head.next;
         }
-        right.next = dummyNode.next;
-        dummyNode.next = left.next;
-        left.next = null;
-        return dummyNode.next;
+
+        tailsmall.next = largerList.next;
+        tailLarge.next = null;
+
+        return smallerList.next;
     }
+
 
     public static void buildList (int[] nums, ListNode tail){ //basic list builder function **
         for (int i = 1; i < nums.length ; i++) {
-            tail.next = new ListNode(nums[i]);
+//            tail.next = new ListNode(nums[i]);
+            tail.next = new ListNode(nums[i],null);
             tail = tail.next;
         }
     }
