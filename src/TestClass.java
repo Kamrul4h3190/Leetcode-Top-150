@@ -3,55 +3,81 @@ import java.util.List;
 
 public class TestClass {
     public static void main(String[] args) {
-        int[] nodes = {1,4,3,2,5,2}; int x = 3;
+//        int[] nodes = {1,2,3,4,5}; int k = 1;
+        int[] nodes = {1,2,3,4,5,6,7,8}; int k = 3;
+//        int[] nodes = {1,2,3,4,5}; int k = 3;
+//        int[] nodes = {1,2}; int k = 5;
         ListNode head = new ListNode(nodes[0]); ListNode tail = head;
         buildList(nodes, tail);
-        head = partition2(head,x);
+        head = reverseKGroup2(head,k);
+//        head = reverse2(head);
         printList(head);
     }
-    public static ListNode partition2(ListNode head, int x) {
-        ListNode smallerList = new ListNode(),largerList = new ListNode();
-        ListNode tailsmall = smallerList,tailLarge = largerList;
-        while (head!=null){
-            if (head.val < x){
-                tailsmall.next = new ListNode(head.val,null);
-//                tailsmall.next = head;
-                tailsmall = tailsmall.next;
-            }else {
-                tailLarge.next = new ListNode(head.val,null);
-//                tailLarge.next = head;
-                tailLarge = tailLarge.next;
-            }
+    //T(n),S(1) ,no extra space, Iterative
+    public static ListNode reverseKGroup2(ListNode head, int k) {
+        if (head.next == null) return head;
+        ListNode dummyNode = new ListNode(-1,head);
+        ListNode prev = dummyNode,currHead = head,next = null,temp=currHead;
 
-            head = head.next;
+        while (temp!=null){
+
+            int count = 1;
+            while(temp.next!=null && count<k){
+                temp = temp.next;
+                count++;
+            }
+            if (count<k) break;
+
+            next = temp.next;
+            temp.next = null;
+
+            prev.next = reverse(currHead);
+
+            prev = currHead;
+            currHead = next;
+            prev.next = currHead;
+            temp = currHead;
+
         }
 
-        tailsmall.next = largerList.next;
-//        tailLarge.next = null;
-
-        return smallerList.next;
+        return dummyNode.next;
     }
-    public static ListNode partition(ListNode head, int x) {
-        ListNode smallerList = new ListNode(),largerList = new ListNode();
-        ListNode tailsmall = smallerList,tailLarge = largerList;
-        while (head!=null){
-            if (head.val < x){
-//                tailsmall.next = new ListNode(head.val,null);
-                tailsmall.next = head;
-                tailsmall = tailsmall.next;
-            }else {
-//                tailLarge.next = new ListNode(head.val,null);
-                tailLarge.next = head;
-                tailLarge = tailLarge.next;
-            }
+    private static ListNode reverse(ListNode head) {
+        ListNode prev = null;ListNode curr = head;ListNode next;
 
-            head = head.next;
+        while(curr != null)
+        {
+            next = curr.next;
+            curr.next = prev;
+            if (next==null) break;
+
+            prev = curr;
+            curr = next;
+        }
+        return curr;
+    }
+
+    //T(n),S(n/k) -number of recursive calls
+    public static ListNode reverseKGroup(ListNode head, int k) {
+        ListNode temp = head; int count = 0;
+        while (count<k){
+            if (temp==null) return head;
+            temp = temp.next; count++;
         }
 
-        tailsmall.next = largerList.next;
-        tailLarge.next = null;
+        ListNode newHead = reverseKGroup(temp,k);
 
-        return smallerList.next;
+        temp = head;    count = 0;
+        while (count<k){
+            ListNode next = temp.next;
+
+            temp.next = newHead;
+            newHead = temp;
+
+            temp = next;    count++;
+        }
+
+        return newHead;
     }
 
 
