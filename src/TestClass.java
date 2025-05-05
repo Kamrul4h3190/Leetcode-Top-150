@@ -2,42 +2,77 @@ import java.util.HashMap;
 
 public class TestClass {
     public static void main(String[] args) {
-        int[] preorder = {3,9,20,15,7},inorder = {9,3,15,20,7};
+//        int[] preorder = {3,9,20,15,7},inorder = {9,3,15,20,7};
+        int[] postorder = {9,15,7,20,3},inorder = {9,3,15,20,7};
 //        int[] preorder = {1,2,4,8,9,10,11,5,3,6,7},inorder = {8,4,10,9,11,2,5,1,6,3,7};
+//        int[] postorder = {8,10,11,9,4,5,2,6,7,3,1},inorder = {8,4,10,9,11,2,5,1,6,3,7};
 //        int[] preorder = {1,2,4,8,9,10,11,5,3,6},inorder = {8,4,10,9,11,2,5,1,6,3};
 //        int[] preorder = {1,2},inorder = {2,1};
-        TreeNode root = buildTree(preorder,inorder);
+        TreeNode root = buildTree(inorder,postorder);
+//        TreeNode root = buildTree(preorder,inorder);
 
         System.out.print("preOrder : "); preOrder(root);
         System.out.print("\ninOrder : "); inOrder(root);
         System.out.print("\npostOrder : "); postOrder(root);
     }
 
-
-
-    public static TreeNode buildTree(int[] preorder, int[] inorder) {
-        int length = preorder.length;   if (length==1) return new TreeNode(preorder[0]);
-
-        HashMap<Integer,Integer> infixMap = new HashMap<>(); for (int i = 0; i <length ; i++) infixMap.put(inorder[i],i);
-
-        return buildTree(preorder,0,length-1,inorder,0,length-1,infixMap);
+    public static TreeNode buildTree(int[] inorder, int[] postorder) {
+        int length = postorder.length;
+        HashMap<Integer, Integer> infixMap = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            infixMap.put(inorder[i], i);
+        }
+        return buildTree(inorder, postorder, 0, length - 1, 0, length - 1, infixMap);
     }
-    public static TreeNode buildTree(int[] preorder, int preLeft,int preRight,
-                                     int[] inorder, int inLeft, int inRight,
-                                     HashMap<Integer,Integer> infixMap) {
-        if (preLeft>preRight || inLeft>inRight ) return null;
-        TreeNode root = new TreeNode(preorder[preLeft]);
-        if (inRight-inLeft== 0 && preRight-preLeft==0) return root;
 
+    private static TreeNode buildTree(int[] inorder, int[] postorder,
+                                      int inLeft, int inRight,
+                                      int postLeft, int postRight,
+                                      HashMap<Integer, Integer> infixMap) {
+        if (inLeft > inRight || postLeft > postRight) return null;
+
+        TreeNode root = new TreeNode(postorder[postRight]);
         int infixRootIndex = infixMap.get(root.val);
-        int leftSubTreeLen = infixRootIndex - inLeft;
-        root.left = buildTree(preorder,preLeft+1,preLeft+leftSubTreeLen,
-                inorder,inLeft,infixRootIndex-1,infixMap);
-        root.right = buildTree(preorder,preLeft+leftSubTreeLen+1,preRight,
-                inorder,infixRootIndex+1,inRight,infixMap);
+        int leftSubtreeLen = infixRootIndex - inLeft;
+
+        root.left = buildTree(inorder, postorder,
+                inLeft, infixRootIndex - 1,
+                postLeft, postLeft + leftSubtreeLen - 1,
+                infixMap);
+
+        root.right = buildTree(inorder, postorder,
+                infixRootIndex + 1, inRight,
+                postLeft + leftSubtreeLen, postRight - 1,
+                infixMap);
 
         return root;
     }
+
+
+
+//    public static TreeNode buildTree(int[] preorder, int[] inorder) {
+//        int length = preorder.length;   if (length==1) return new TreeNode(preorder[0]);
+//
+//        HashMap<Integer,Integer> infixMap = new HashMap<>(); for (int i = 0; i <length ; i++) infixMap.put(inorder[i],i);
+//
+//        return buildTree(preorder,0,length-1,inorder,0,length-1,infixMap);
+//    }
+//    public static TreeNode buildTree(int[] preorder, int preLeft,int preRight,
+//                                     int[] inorder, int inLeft, int inRight,
+//                                     HashMap<Integer,Integer> infixMap) {
+//        if (preLeft>preRight || inLeft>inRight ) return null;
+//        TreeNode root = new TreeNode(preorder[preLeft]);
+//        if (inRight-inLeft== 0 && preRight-preLeft==0) return root;
+//
+//        int infixRootIndex = infixMap.get(root.val);
+//        int leftSubTreeLen = infixRootIndex - inLeft;
+//        root.left = buildTree(preorder,preLeft+1,preLeft+leftSubTreeLen,
+//                inorder,inLeft,infixRootIndex-1,infixMap);
+//        root.right = buildTree(preorder,preLeft+leftSubTreeLen+1,preRight,
+//                inorder,infixRootIndex+1,inRight,infixMap);
+//
+//        return root;
+//    }
 
     public static void preOrder(TreeNode root){
         if (root==null) return;
