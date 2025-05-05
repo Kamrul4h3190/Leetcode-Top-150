@@ -48,6 +48,7 @@
       <pinned-members>
         <PinnedItemInfo parentTag="LRUCache" memberName="head" />
         <PinnedItemInfo parentTag="Node" memberName="next" />
+        <PinnedItemInfo parentTag="TreeNode" memberName="right" />
       </pinned-members>
     </pin-to-top-manager>
     <watches-manager>
