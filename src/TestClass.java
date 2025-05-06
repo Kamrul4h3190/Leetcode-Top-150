@@ -2,7 +2,8 @@ import java.util.HashMap;
 
 public class TestClass {
     public static void main(String[] args) {
-        int[] preorder = {3,9,20,15,7},inorder = {9,3,15,20,7};
+        int[] preorder = {3,8,20,15,7},inorder = {9,3,15,20,7};
+        int[] preorder2 = {3,9,20,15,7},inorder2 = {9,3,15,20,7};
 //        int[] postorder = {9,15,7,20,3},inorder = {9,3,15,20,7};
 //        int[] preorder = {1,2,4,8,9,10,11,5,3,6,7},inorder = {8,4,10,9,11,2,5,1,6,3,7};
 //        int[] postorder = {8,10,11,9,4,5,2,6,7,3,1},inorder = {8,4,10,9,11,2,5,1,6,3,7};
@@ -10,11 +11,18 @@ public class TestClass {
 //        int[] preorder = {1,2},inorder = {2,1};
 //        TreeNode root = buildTree(inorder,postorder);
         TreeNode root = buildTree(preorder,inorder);
-        System.out.println("maxDepth : "+maxDepth(root));
+        TreeNode root2 = buildTree(preorder2,inorder2);
+        System.out.println("sameTree : "+isSameTree(root,root2));
 //        System.out.print("preOrder : "); preOrder(root);
 //        System.out.print("\ninOrder : "); inOrder(root);
 //        System.out.print("\npostOrder : "); postOrder(root);
 
+    }
+    public static boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p==null && q==null) return true;
+        if (p==null || q==null) return false;
+        if (p.val != q.val) return false;
+        return isSameTree(p.left,q.left) && isSameTree(p.right,q.right);
     }
 
     public static int maxDepth(TreeNode root) {
