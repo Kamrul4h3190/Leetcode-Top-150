@@ -2,18 +2,34 @@ import java.util.HashMap;
 
 public class TestClass {
     public static void main(String[] args) {
-        int[] preorder = {3,9,20,15,7},inorder = {9,3,15,20,7};
-//        int[] preorder2 = {3,9,20,15,7},inorder2 = {9,3,15,20,7};
+        int[] levelOrder = { 1,2,2,3,4,4,3};
+//        int[] levelOrder = { 1,2,2,-200,3,-200,3}; //use -200 for null nodes
+//        int[] preorder = { 1 ,2 ,3 ,4 ,2 ,4 ,3},inorder = {3 ,2 ,4 ,1 ,4 ,2 ,3};
+//        int[] preorder = {1,2,3},inorder = {2,1,3};
+//        int[] preorder = {3,9,20,15,7},inorder = {9,3,15,20,7};
 //        int[] postorder = {9,15,7,20,3},inorder = {9,3,15,20,7};
 //        int[] preorder = {1,2,4,8,9,10,11,5,3,6},inorder = {8,4,10,9,11,2,5,1,6,3};
 //        int[] preorder = {1,2},inorder = {2,1};
 //        TreeNode root = buildTree(inorder,postorder);
-        TreeNode root = buildTree(preorder,inorder);
-        TreeNode invertedRoot = invertTree(root);
-        System.out.print("preOrder : "); preOrder(root);
+//        TreeNode root = buildTree(preorder,inorder);
+        TreeNode root = buildTreeLevelOrder(levelOrder,0);
+//        System.out.print("preOrder : "); preOrder(root);
+//        System.out.print("\npreOrderi: "); preOrder(invertTree(root));
+        System.out.println("isSymmetric : " +isSymmetric(root));
+//        TreeNode invertedRoot = invertTree(root);
+//        System.out.print("preOrder : "); preOrder(root);
 //        System.out.print("\ninOrder : "); inOrder(root);
 //        System.out.print("\npostOrder : "); postOrder(root);
 
+    }
+    public static boolean isSymmetric(TreeNode root) {
+        return isMirror(root.left,root.right);
+    }
+    public static boolean isMirror(TreeNode left,TreeNode right){
+        if (left==null && right==null) return true;
+        if (left==null || right==null) return false;
+        if (left.val != right.val) return false;
+        return isMirror(left.left,right.right) && isMirror(left.right,right.left);
     }
     public static TreeNode invertTree(TreeNode root) {
         if(root==null) return null;
@@ -24,6 +40,14 @@ public class TestClass {
         root.right = left;
 
         return root;
+    }
+    public static boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p==null && q==null)
+            return true;
+        if (p==null || q==null)
+            return false;
+        if (p.val != q.val) return false;
+        return isSameTree(p.left,q.left) && isSameTree(p.right,q.right);
     }
 //    public static TreeNode buildTree(int[] inorder, int[] postorder) {
 //        int length = postorder.length;
@@ -78,6 +102,16 @@ public class TestClass {
                 inorder,inLeft,infixRootIndex-1,infixMap);
         root.right = buildTree(preorder,preLeft+leftSubTreeLen+1,preRight,
                 inorder,infixRootIndex+1,inRight,infixMap);
+
+        return root;
+    }
+
+    public static TreeNode buildTreeLevelOrder(int[] levelOrder,int index) {
+        if (index >= levelOrder.length || levelOrder[index]==-200) return null;
+
+        TreeNode root = new TreeNode(levelOrder[index]);
+        root.left = buildTreeLevelOrder(levelOrder,2*index+1);
+        root.right = buildTreeLevelOrder(levelOrder,2*index+2);
 
         return root;
     }
