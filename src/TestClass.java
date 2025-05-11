@@ -2,7 +2,7 @@ import java.util.HashMap;
 
 public class TestClass {
     public static void main(String[] args) {
-        int[] levelOrder = { 5,4,8,11,-200,13,4,7,2,-200,-200,-200,1};
+        int[] levelOrder = { 4,9,0,5,1};
 //        int[] levelOrder = { 1,2,2,-200,3,-200,3}; //use -200 for null nodes
 //        int[] preorder = { 1 ,2 ,3 ,4 ,2 ,4 ,3},inorder = {3 ,2 ,4 ,1 ,4 ,2 ,3};
 //        int[] preorder = {1,2,3},inorder = {2,1,3};
@@ -13,23 +13,22 @@ public class TestClass {
 //        TreeNode root = buildTree(inorder,postorder);
 //        TreeNode root = buildTree(preorder,inorder);
         TreeNode root = buildTreeLevelOrder(levelOrder,0);
-        System.out.println("has path sum : "+hasPathSum(root,22));
+        System.out.println("root to leaf number path sum : "+sumNumbers(root));
         System.out.print("preOrder : "); preOrder(root);
 //        System.out.print("\ninOrder : "); inOrder(root);
 //        System.out.print("\npostOrder : "); postOrder(root);
 
     }
 
-    public static boolean hasPathSum(TreeNode root, int targetSum) {
-        if (root == null) return false;
+    public static int sumNumbers(TreeNode root) {
+        return sumNumbers(root,0);
+    }
+    public static int sumNumbers(TreeNode root,int sum) {
+        if (root==null) return 0;
+        sum = sum*10+root.val;
+        if (root.left==null && root.right==null) return sum;
 
-        if (root.left == null && root.right == null) {
-            return targetSum - root.val == 0;
-        }
-
-        targetSum -= root.val;
-
-        return hasPathSum(root.left, targetSum) || hasPathSum(root.right, targetSum);
+        return sumNumbers(root.left,sum)+sumNumbers(root.right,sum);
     }
 
 //    public static TreeNode buildTree(int[] inorder, int[] postorder) {
