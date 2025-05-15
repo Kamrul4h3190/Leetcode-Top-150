@@ -1,5 +1,3 @@
-import com.sun.source.tree.Tree;
-
 import java.util.*;
 
 public class TestClass {
@@ -17,8 +15,8 @@ public class TestClass {
 //        TreeNode root = buildTree(preorder,inorder);
         TreeNode root = buildTreeLevelOrder(levelOrder,0);
 
-        List<Integer> nodes = rightSideView(root);
-        for (int val : nodes) {
+        List<Double> nodes = averageOfLevels(root);
+        for (double val : nodes) {
             System.out.print(val+",");
         }
 
@@ -28,8 +26,8 @@ public class TestClass {
 
     }
 
-    public static List<Integer> rightSideView(TreeNode root) {
-        ArrayList<Integer> result = new ArrayList<>();
+    public static List<Double> averageOfLevels(TreeNode root) {
+        ArrayList<Double> result = new ArrayList<>();
         Queue<TreeNode> queue = new LinkedList<>();
         if (root==null) return result;
 
@@ -37,15 +35,16 @@ public class TestClass {
         while (!queue.isEmpty()){
             TreeNode node = null;
             int n = queue.size();
-            while (n>0){
+            double sum = 0;
+            for (int i = 0; i<n; i++){
                 node = queue.poll();
                 if (node!=null){
+                    sum+= node.val;
                     if (node.left!=null) queue.offer(node.left);
                     if (node.right!=null) queue.offer(node.right);
                 }
-                n--;
             }
-            if (node != null) result.add(node.val);
+            result.add(sum/n);
         }
         return result;
     }
