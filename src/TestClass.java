@@ -25,6 +25,28 @@ public class TestClass {
 //        System.out.print("\npostOrder : "); postOrder(root);
 
     }
+    public static List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> levels = new ArrayList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        if (root==null) return levels;
+
+        queue.offer(root);
+        while (!queue.isEmpty()){
+            List<Integer> level = new ArrayList<>();
+            int n = queue.size();
+            for (int i = 0; i<n; i++){
+                TreeNode  node = queue.poll();
+                if (node!=null){
+                    level.add(node.val);
+                    if (node.left!=null) queue.offer(node.left);
+                    if (node.right!=null) queue.offer(node.right);
+                }
+            }
+            levels.add(level);
+        }
+
+        return levels;
+    }
 
     public static List<Double> averageOfLevels(TreeNode root) {
         ArrayList<Double> result = new ArrayList<>();
