@@ -3,7 +3,7 @@ import java.util.*;
 public class TestClass {
     public static void main(String[] args) {
 //        int[] levelOrder = { -10,9,20,-200,-200,15,7};
-        int[] levelOrder = {1,2,3,-200,5,-200,4};
+        int[] levelOrder = {1,2,3,4,5,6};
 //        int[] levelOrder = { 1,2,2,-200,3,-200,3}; //use -200 for null nodes
 //        int[] preorder = { 1 ,2 ,3 ,4 ,2 ,4 ,3},inorder = {3 ,2 ,4 ,1 ,4 ,2 ,3};
 //        int[] preorder = {1,2,3},inorder = {2,1,3};
@@ -15,9 +15,9 @@ public class TestClass {
 //        TreeNode root = buildTree(preorder,inorder);
         TreeNode root = buildTreeLevelOrder(levelOrder,0);
 
-        List<Double> nodes = averageOfLevels(root);
-        for (double val : nodes) {
-            System.out.print(val+",");
+        List<List<Integer>> levels = zigzagLevelOrder2(root);
+        for (List<Integer> level : levels) {
+            System.out.print(level.toString());
         }
 
 //        System.out.print("preOrder : "); preOrder(root);
@@ -25,50 +25,61 @@ public class TestClass {
 //        System.out.print("\npostOrder : "); postOrder(root);
 
     }
-    public static List<List<Integer>> levelOrder(TreeNode root) {
+    //level wise forward/backward indexed insertion
+    public static List<List<Integer>> zigzagLevelOrder2(TreeNode root) {
         List<List<Integer>> levels = new ArrayList<>();
-        Queue<TreeNode> queue = new LinkedList<>();
+        ArrayList<TreeNode> queue = new ArrayList<>();
         if (root==null) return levels;
 
-        queue.offer(root);
+        queue.add(root);
+        boolean forward = true;
         while (!queue.isEmpty()){
-            List<Integer> level = new ArrayList<>();
             int n = queue.size();
+            List<Integer> level = Arrays.asList(new Integer[n]);
             for (int i = 0; i<n; i++){
-                TreeNode  node = queue.poll();
+                int levelInsertPosition = forward ? i : n-1-i;
+                TreeNode  node = queue.remove(0);
                 if (node!=null){
-                    level.add(node.val);
-                    if (node.left!=null) queue.offer(node.left);
-                    if (node.right!=null) queue.offer(node.right);
+                    level.set(levelInsertPosition,node.val);
+                    if (node.left!=null) queue.add(node.left);
+                    if (node.right!=null) queue.add(node.right);
                 }
             }
+            forward = !forward;
             levels.add(level);
         }
 
         return levels;
     }
-
-    public static List<Double> averageOfLevels(TreeNode root) {
-        ArrayList<Double> result = new ArrayList<>();
-        Queue<TreeNode> queue = new LinkedList<>();
-        if (root==null) return result;
+    //double ended queue
+    public static List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> levels = new ArrayList<>();
+        ArrayDeque<TreeNode> queue = new ArrayDeque<>(); //double sided enque/deque array
+        if (root==null) return levels;
 
         queue.offer(root);
+        boolean forward = true;
         while (!queue.isEmpty()){
-            TreeNode node = null;
+            List<Integer> level = new ArrayList<>();
             int n = queue.size();
-            double sum = 0;
             for (int i = 0; i<n; i++){
-                node = queue.poll();
+                TreeNode  node = forward ? queue.pollFirst():queue.pollLast();
                 if (node!=null){
-                    sum+= node.val;
-                    if (node.left!=null) queue.offer(node.left);
-                    if (node.right!=null) queue.offer(node.right);
+                    level.add(node.val);
+                    if (forward){
+                        if (node.left!=null) queue.offerLast(node.left);
+                        if (node.right!=null) queue.offerLast(node.right);
+                    } else {
+                        if (node.right!=null) queue.offerFirst(node.right);
+                        if (node.left!=null) queue.offerFirst(node.left);
+                    }
                 }
             }
-            result.add(sum/n);
+            forward = !forward;
+            levels.add(level);
         }
-        return result;
+
+        return levels;
     }
 
 
