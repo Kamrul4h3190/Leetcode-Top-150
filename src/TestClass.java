@@ -5,7 +5,8 @@ import java.util.*;
 public class TestClass {
     public static void main(String[] args) {
 //        int[] levelOrder = { -10,9,20,-200,-200,15,7};
-        int[] levelOrder = {1,0,48,-200,-200,12,49};
+//        int[] levelOrder = {5,1,4,-200,-200,3,6};
+        int[] levelOrder = {5,4,6,-200,-200,3,7};
 //        int[] levelOrder = { 1,2,2,-200,3,-200,3}; //use -200 for null nodes
 //        int[] preorder = { 1 ,2 ,3 ,4 ,2 ,4 ,3},inorder = {3 ,2 ,4 ,1 ,4 ,2 ,3};
 //        int[] preorder = {1,2,3},inorder = {2,1,3};
@@ -17,26 +18,20 @@ public class TestClass {
 //        TreeNode root = buildTree(preorder,inorder);
         TreeNode root = buildTreeLevelOrder(levelOrder,0);
 
-        System.out.println("min difference : "+getMinimumDifference(root));
+        System.out.println("BST valid : "+isValidBST(root));
 
 //        System.out.print("preOrder : "); preOrder(root);
 //        System.out.print("\ninOrder : "); inOrder(root);
 //        System.out.print("\npostOrder : "); postOrder(root);
 
     }
-    static int minDiff = Integer.MAX_VALUE;
-    static TreeNode prev = null;
-    public static int getMinimumDifference(TreeNode root) {
-        if (root==null) return minDiff;
-
-        getMinimumDifference(root.left);
-
-        if (prev!=null) minDiff = Math.min(minDiff,root.val-prev.val);
-        prev = root;
-
-        getMinimumDifference(root.right);
-
-        return minDiff;
+    public static boolean isValidBST(TreeNode root) {
+        return isValidBST(root,Long.MIN_VALUE,Long.MAX_VALUE);//int ranges out for max values
+    }
+    public static boolean isValidBST(TreeNode root,long min,long max) {
+        if (root==null) return true;
+        if (root.val<=min || root.val>=max) return false;
+        return isValidBST(root.left,min,root.val) && isValidBST(root.right,root.val,max);
     }
 
     //double ended queue
