@@ -1,9 +1,11 @@
+import com.sun.source.tree.Tree;
+
 import java.util.*;
 
 public class TestClass {
     public static void main(String[] args) {
 //        int[] levelOrder = { -10,9,20,-200,-200,15,7};
-        int[] levelOrder = {1,2,3,4,5,6};
+        int[] levelOrder = {1,0,48,-200,-200,12,49};
 //        int[] levelOrder = { 1,2,2,-200,3,-200,3}; //use -200 for null nodes
 //        int[] preorder = { 1 ,2 ,3 ,4 ,2 ,4 ,3},inorder = {3 ,2 ,4 ,1 ,4 ,2 ,3};
 //        int[] preorder = {1,2,3},inorder = {2,1,3};
@@ -15,42 +17,28 @@ public class TestClass {
 //        TreeNode root = buildTree(preorder,inorder);
         TreeNode root = buildTreeLevelOrder(levelOrder,0);
 
-        List<List<Integer>> levels = zigzagLevelOrder2(root);
-        for (List<Integer> level : levels) {
-            System.out.print(level.toString());
-        }
+        System.out.println("min difference : "+getMinimumDifference(root));
 
 //        System.out.print("preOrder : "); preOrder(root);
 //        System.out.print("\ninOrder : "); inOrder(root);
 //        System.out.print("\npostOrder : "); postOrder(root);
 
     }
-    //level wise forward/backward indexed insertion
-    public static List<List<Integer>> zigzagLevelOrder2(TreeNode root) {
-        List<List<Integer>> levels = new ArrayList<>();
-        ArrayList<TreeNode> queue = new ArrayList<>();
-        if (root==null) return levels;
+    static int minDiff = Integer.MAX_VALUE;
+    static TreeNode prev = null;
+    public static int getMinimumDifference(TreeNode root) {
+        if (root==null) return minDiff;
 
-        queue.add(root);
-        boolean forward = true;
-        while (!queue.isEmpty()){
-            int n = queue.size();
-            List<Integer> level = Arrays.asList(new Integer[n]);
-            for (int i = 0; i<n; i++){
-                int levelInsertPosition = forward ? i : n-1-i;
-                TreeNode  node = queue.remove(0);
-                if (node!=null){
-                    level.set(levelInsertPosition,node.val);
-                    if (node.left!=null) queue.add(node.left);
-                    if (node.right!=null) queue.add(node.right);
-                }
-            }
-            forward = !forward;
-            levels.add(level);
-        }
+        getMinimumDifference(root.left);
 
-        return levels;
+        if (prev!=null) minDiff = Math.min(minDiff,root.val-prev.val);
+        prev = root;
+
+        getMinimumDifference(root.right);
+
+        return minDiff;
     }
+
     //double ended queue
     public static List<List<Integer>> zigzagLevelOrder(TreeNode root) {
         List<List<Integer>> levels = new ArrayList<>();
