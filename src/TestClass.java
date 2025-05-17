@@ -1,12 +1,11 @@
-import com.sun.source.tree.Tree;
-
 import java.util.*;
 
 public class TestClass {
     public static void main(String[] args) {
+        TestClass testClass = new TestClass();
 //        int[] levelOrder = { -10,9,20,-200,-200,15,7};
 //        int[] levelOrder = {5,1,4,-200,-200,3,6};
-        int[] levelOrder = {5,4,6,-200,-200,3,7};
+        int[] levelOrder = {5,4,6,-200,-200,3,7};int k = 3;
 //        int[] levelOrder = { 1,2,2,-200,3,-200,3}; //use -200 for null nodes
 //        int[] preorder = { 1 ,2 ,3 ,4 ,2 ,4 ,3},inorder = {3 ,2 ,4 ,1 ,4 ,2 ,3};
 //        int[] preorder = {1,2,3},inorder = {2,1,3};
@@ -18,23 +17,29 @@ public class TestClass {
 //        TreeNode root = buildTree(preorder,inorder);
         TreeNode root = buildTreeLevelOrder(levelOrder,0);
 
-        System.out.println("BST valid : "+isValidBST(root));
+        System.out.println("kthSmallest : "+testClass.kthSmallest(root,k));
 
 //        System.out.print("preOrder : "); preOrder(root);
 //        System.out.print("\ninOrder : "); inOrder(root);
 //        System.out.print("\npostOrder : "); postOrder(root);
 
     }
-    public static boolean isValidBST(TreeNode root) {
-        return isValidBST(root,Long.MIN_VALUE,Long.MAX_VALUE);//int ranges out for max values
-    }
-    public static boolean isValidBST(TreeNode root,long min,long max) {
-        if (root==null) return true;
-        if (root.val<=min || root.val>=max) return false;
-        return isValidBST(root.left,min,root.val) && isValidBST(root.right,root.val,max);
+    int kth = 0, res = 0;
+
+    public int kthSmallest(TreeNode root, int k) {
+        inorder(root, k);
+        return res;
     }
 
-    //double ended queue
+    public void inorder(TreeNode root, int k) {
+        if(root == null) return;
+
+        inorder(root.left, k);
+        kth++;
+        if(kth == k) res = root.val;
+        inorder(root.right, k);
+    }
+
     public static List<List<Integer>> zigzagLevelOrder(TreeNode root) {
         List<List<Integer>> levels = new ArrayList<>();
         ArrayDeque<TreeNode> queue = new ArrayDeque<>(); //double sided enque/deque array
