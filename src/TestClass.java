@@ -3,35 +3,43 @@ import java.util.*;
 public class TestClass {
     public static void main(String[] args) {
         TestClass testClass = new TestClass();
-        char[][] grid = {
-                {'1','1','0','0','0'},
-                {'1','1','0','0','0'},
-                {'0','0','1','0','0'},
-                {'0','0','0','1','1'}
+        char[][] board = {
+                {'O','O'},
+                {'O','O'},
         };
-        System.out.println("numIsLands : "+testClass.numIslands(grid));
+//        char[][] board = {
+//                {'X','X','X','X'},
+//                {'X','O','O','X'},
+//                {'X','X','O','X'},
+//                {'X','O','X','X'}
+//        };
+        testClass.solve(board);
+        System.out.println(Arrays.deepToString(board));
     }
-
-    public int numIslands(char[][] grid) {
-        int islands = 0;
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                if (grid[i][j]=='1'){
-                    visitlandDFS(grid,i,j);
-                    islands++;
-                }
+    public void solve(char[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (       (i==0 || i== board.length-1) && board[i][j]=='O'
+                        || (j==0 || j==board[0].length-1) && board[i][j]=='O')
+                        locateFalseRegions(board,i,j);
             }
         }
-        return islands;
-    }
-    private void visitlandDFS(char[][] grid,int x,int y){
-        if (x<0 || x>= grid.length || y<0 || y>=grid[0].length || grid[x][y]!='1') return;
 
-        grid[x][y] = '2';
-        visitlandDFS(grid,x,y+1);//right
-        visitlandDFS(grid,x+1, y);//bottom
-        visitlandDFS(grid, x, y-1);//left
-        visitlandDFS(grid, x-1, y);//top
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if(board[i][j]=='O') board[i][j] = 'X';
+                else if (board[i][j]=='F') board[i][j] = 'O';
+            }
+        }
+    }
+    private void locateFalseRegions(char[][] grid, int x, int y){
+        if (x<0 || x>= grid.length || y<0 || y>=grid[0].length || grid[x][y]!='O') return;
+
+        grid[x][y] = 'F';
+        locateFalseRegions(grid,x,y+1);//right
+        locateFalseRegions(grid,x+1, y);//bottom
+        locateFalseRegions(grid, x, y-1);//left
+        locateFalseRegions(grid, x-1, y);//top
     }
 }
 
