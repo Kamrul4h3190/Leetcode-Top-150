@@ -3,45 +3,65 @@ import java.util.*;
 public class TestClass {
     public static void main(String[] args) {
         TestClass testClass = new TestClass();
-        char[][] board = {
-                {'O','O'},
-                {'O','O'},
-        };
-//        char[][] board = {
-//                {'X','X','X','X'},
-//                {'X','O','O','X'},
-//                {'X','X','O','X'},
-//                {'X','O','X','X'}
-//        };
-        testClass.solve(board);
-        System.out.println(Arrays.deepToString(board));
+//        int numCourses = 3;
+//        int[][] prerequisites = {{1,0},{0,2},{2,1}};
+//        int numCourses = 20;
+//        int[][] prerequisites = {{0,10},{3,18},{5,5},{6,11},{11,14},{13,1},{15,1},{17,4}};
+        int numCourses = 5;
+        int[][] prerequisites = {{1,0},{1,2},{3,2},{4,3},{2,4}};
+//        int numCourses = 2;
+//        int[][] prerequisites = {{1,0},{0,1}};
+//        System.out.println("canFinish : "+testClass.canFinish(numCourses,prerequisites));
+
+        List<List<Integer>> graph = testClass.buildGraph(prerequisites,numCourses);
+        testClass.showGraph(graph);
+//        System.out.println(graph);
+        System.out.println("canFinish : "+testClass.canFinish(numCourses,prerequisites));
     }
-    public void solve(char[][] board) {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                if (       (i==0 || i== board.length-1) && board[i][j]=='O'
-                        || (j==0 || j==board[0].length-1) && board[i][j]=='O')
-                        locateFalseRegions(board,i,j);
-            }
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if(numCourses == 0 || prerequisites.length == 0) return true;
+
+        List<List<Integer>> graph = buildGraph(prerequisites, numCourses);
+        int [] visited = new int[numCourses];
+
+        for (int i = 0; i < numCourses; i++) {
+            if (!dfs(i,graph,visited)) return false;
         }
 
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                if(board[i][j]=='O') board[i][j] = 'X';
-                else if (board[i][j]=='F') board[i][j] = 'O';
+        return true;
+    }
+    public boolean dfs(int i, List<List<Integer>> graph, int[] visited){
+        if (visited[i]==2) return true;
+        if (visited[i]==1) return false;
+        visited[i] = 1;//started traversing
+        List<Integer> adjNodes = graph.get(i);
+
+        for (int adjNode: adjNodes){
+            if(!dfs(adjNode,graph,visited)) return false;
+        }
+
+        visited[i] = 2;//finished traversing all neighbors
+        return true;
+    }
+
+    public List<List<Integer>> buildGraph(int[][] prerequisites,int numCourses){
+        List<List<Integer>> graph = new ArrayList<>(numCourses);
+        for (int i = 0; i < numCourses; i++) graph.add(new ArrayList<>());
+
+        for (int[] prerequisite : prerequisites) {
+            graph.get(prerequisite[1]).add(prerequisite[0]);
+        }
+        return graph;
+    }
+
+    public void showGraph(List<List<Integer>> graph){
+        for (int i=0;i<graph.size(); i++){
+            System.out.print(i+" : ");
+            for (int adjacent :graph.get(i)) {
+                System.out.print(adjacent+"->");
             }
+            System.out.println();
         }
     }
-    private void locateFalseRegions(char[][] grid, int x, int y){
-        if (x<0 || x>= grid.length || y<0 || y>=grid[0].length || grid[x][y]!='O') return;
 
-        grid[x][y] = 'F';
-        locateFalseRegions(grid,x,y+1);//right
-        locateFalseRegions(grid,x+1, y);//bottom
-        locateFalseRegions(grid, x, y-1);//left
-        locateFalseRegions(grid, x-1, y);//top
-    }
 }
-
-
-
