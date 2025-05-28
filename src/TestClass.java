@@ -2,77 +2,55 @@ import java.util.*;
 
 public class TestClass {
 
-    int[][] adjList =   {{2,4},{1,3},{2,4},{1,3}};
-    Node[]  nodes = new Node[adjList.length+1];
-
     public static void main(String[] args) {
         TestClass testClass = new TestClass();
+        int[][] board = {
+                {-1,-1,-1,-1,-1,-1},
+                {-1,-1,-1,-1,-1,-1},
+                {-1,-1,-1,-1,-1,-1},
+                {-1,35,-1,-1,13,-1},
+                {-1,-1,-1,-1,-1,-1},
+                {-1,15,-1,-1,-1,-1}
+        };
 
-        int[][] adjList =   {{2,4},{1,3},{2,4},{1,3}};
-        Node[]  nodes = new Node[adjList.length+1];
-        for (int i = 1; i <= adjList.length; i++) {
-            nodes[i] = new Node(i);
-        }
-
-        Map<Node,List<Node>> graph = testClass.buildGraph(adjList,nodes);
-        Node node = nodes[1];
-        Node clone = testClass.cloneGraph(node);
-//        testClass.showGraph(graph);
+        System.out.println("minMoves : "+testClass.snakesAndLadders(board));
     }
-    public Node cloneGraph(Node node) {
-        if (node==null) return null;
-        Map<Node,Node> map = new HashMap<>();
-        return dfs(node,map);
-    }
-    private Node dfs(Node node,Map<Node,Node> map){
+    public int snakesAndLadders(int[][] board) {
+        int moves = 0,n = board.length;
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[][] visited = new boolean[n][n];
 
-        if (map.containsKey(node)) return map.get(node);
-        map.put(node,new Node(node.val));
+        queue.add(1); visited[n-1][0] = true;
+        while (!queue.isEmpty()){
+            int levelSize = queue.size();
+            for (int i = 0; i < levelSize; i++) {
+                int currVal = queue.poll();
+                if (currVal==n*n) return moves;
 
-        for (Node neighbor : node.neighbors ) {
-            Node clone = dfs(neighbor,map);
-            map.get(node).neighbors.add(clone);
-        }
-        return map.get(node);
-    }
-    private Map<Node,List<Node>> buildGraph(int[][] adjList,Node[] nodes){
-        Map<Node,List<Node>> graph = new HashMap<>();
-        for (int i = 0; i < adjList.length; i++) {
-            Node key = nodes[i+1];
-            List<Node> neighbors = new ArrayList<>();
-            for (int neighbor : adjList[i]) {
-                neighbors.add(nodes[neighbor]);
+                for (int dice = 1; dice <=6 ; dice++) {
+                    if (currVal+dice==n*n) return moves+1;
+
+                    int[] boustrophedonPosition = findCoordinates(currVal+dice,n);
+                    int x = boustrophedonPosition[0],y = boustrophedonPosition[1];
+                    if (!visited[x][y]){
+                        visited[x][y] = true;
+
+                        if (board[x][y]==-1)    queue.add(currVal+dice);
+                        else {
+                            if (board[x][y]==n*n) return moves+1;
+                            queue.add(board[x][y]);
+                        }
+                    }
+                }
             }
-            key.neighbors = neighbors;
-            graph.put(key,neighbors);
+            moves++;
         }
-
-        return graph;
+        return -1;
     }
-
-    private void showGraph(Map<Node,List<Node>> graph){
-        for (Node key : graph.keySet()){
-            System.out.print(key.val+" : ");
-            for (Node neighbor : graph.get(key)) {
-                System.out.print(neighbor.val+" ");
-            }
-            System.out.println();
-        }
-    }
-}
-class Node {
-    public int val;
-    public List<Node> neighbors;
-    public Node() {
-        val = 0;
-        neighbors = new ArrayList<Node>();
-    }
-    public Node(int _val) {
-        val = _val;
-        neighbors = new ArrayList<Node>();
-    }
-    public Node(int _val, ArrayList<Node> _neighbors) {
-        val = _val;
-        neighbors = _neighbors;
+    public int[] findCoordinates(int curr, int n) {
+        int r = (curr - 1) / n;
+        int c = (curr - 1) % n;
+        if (r % 2 != 0) c = n-1-c;
+        return new int[]{n-1-r, c};
     }
 }
