@@ -4,30 +4,38 @@ public class TestClass {
 
     public static void main(String[] args) {
         TestClass testClass = new TestClass();
-        String startGene = "AACCGGTT", endGene = "AAACGGTA";
-        String[] bank = {"AACCGGTA","AACCGCTA","AAACGGTA"};
 
-        System.out.println("minMoves : "+testClass.minMutation(startGene,endGene,bank));
+        String beginWord = "hit",endWord = "cog";
+        List<String> wordList = Arrays.asList("hot","dot","dog","lot","log","cog");
+        System.out.println("ladder Length : "+testClass.ladderLength(beginWord,endWord,wordList));
     }
-    public int minMutation(String startGene, String endGene, String[] bank) {
-        int level = 0;
-        HashSet<String> bankSet = new HashSet<>(List.of(bank));
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        int level = 1;
+        HashSet<String> wordSet = new HashSet<>(wordList);
+        if (!wordSet.contains(endWord)) return 0;
+
+        HashSet<Character> chars = new HashSet<>();
+        for (String word : wordSet) {
+            for (char ch : word.toCharArray()) {
+                chars.add(ch);
+            }
+        }
 
         Queue<String> queue = new LinkedList<>(); HashSet<String> visited = new HashSet<>();
-        queue.offer(startGene); visited.add(startGene);
+        queue.offer(beginWord); visited.add(beginWord);
         while (!queue.isEmpty()){
             int size = queue.size();
             for (int i = 0; i < size; i++) {
                 String curr = queue.poll();
-                if (curr.equals(endGene)) return level;
-                
-                for (char gene : "ACGT".toCharArray()) {
-                    for (int s = 0; s < 8; s++) {
+                if (curr.equals(endWord)) return level;
+
+                for (char ch : chars) {
+                    for (int s = 0; s < curr.length(); s++) {
                         char[] currCharArray = curr.toCharArray();
-                        if(currCharArray[s]!=gene){
-                            currCharArray[s] = gene;
+                        if(currCharArray[s]!=ch){
+                            currCharArray[s] = ch;
                             String next = new String(currCharArray);
-                            if (!visited.contains(next) && bankSet.contains(next)){
+                            if (!visited.contains(next) && wordSet.contains(next)){
                                 queue.add(next);
                                 visited.add(next);
                             }
@@ -38,6 +46,7 @@ public class TestClass {
             level++;
         }
 
-        return -1;
+        return 0;
     }
+
 }
