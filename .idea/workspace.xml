@@ -33,8 +33,8 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration name="TestClass" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="TestClass" />
+    <configuration name="Trie" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Trie" />
       <module name="Problem_solving" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -42,7 +42,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.TestClass" />
+        <item itemvalue="Application.Trie" />
       </list>
     </recent_temporary>
   </component>
