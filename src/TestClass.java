@@ -1,29 +1,39 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class TestClass {
     public static void main(String[] args) {
         TestClass testClass = new TestClass();
-        int n=4,k=2;
-        System.out.println(testClass.combine(n,k));
+        int[] nums = {1,2,3};
+        System.out.println(testClass.permute(nums));
     }
-    public List<List<Integer>> combine(int n, int k) {
-        List<List<Integer>> combinations = new ArrayList<>();
-        backtrack(1,n,k,new ArrayList<>(),combinations);
-        return combinations;
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> permutations = new ArrayList<>();
+        backtrack(new ArrayList<>(),new HashSet<>(),permutations,nums);
+        return permutations;
     }
-    private void backtrack(int start,int n,int k,ArrayList<Integer> combination,List<List<Integer>> combinations) {
-        if (k==0) {
-            combinations.add(new ArrayList<>(combination));
+    private void backtrack(List<Integer> permutation, HashSet<Integer> set,List<List<Integer>> permutations,int[] nums){
+        if (permutation.size()== nums.length){
+            permutations.add(new ArrayList<>(permutation));
             return;
         }
-
-        for (int i = start; i <=n ; i++) {
-            combination.add(i);
-            backtrack(i+1,n,k-1,combination,combinations);
-            combination.remove(combination.size()-1);
+        for (int i = 0; i < nums.length; i++) {
+            int num = nums[i];
+            if (!set.contains(num)){
+                permutation.add(num); set.add(num);
+                backtrack(permutation,set,permutations,nums);
+                permutation.remove(permutation.size()-1); set.remove(num);
+            }
         }
+//        for (int num : nums){ // for each slow performance, beats 6 %
+//            if (!set.contains(num)){
+//                permutation.add(num);
+//                set.add(num);
+//
+//                backtrack(permutation,set,permutations,nums);
+//
+//                permutation.removeLast();
+//                set.remove(num);
+//            }
+//        }
     }
 }
