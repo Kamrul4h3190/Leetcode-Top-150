@@ -6,42 +6,24 @@ import java.util.Map;
 class TestClass {
     public static void main(String[] args) {
         TestClass testClass = new TestClass();
-        String digits = "23";
-        System.out.println(testClass.letterCombinations(digits));
+        int n=4,k=2;
+        System.out.println(testClass.combine(n,k));
     }
-    public List<String> letterCombinations(String digits) {
-        List<String> res = new ArrayList<>();
-
-        if (digits == null || digits.length() == 0) {
-            return res;
-        }
-
-        Map<Character, String> digitToLetters = new HashMap<>();
-        digitToLetters.put('2', "abc");
-        digitToLetters.put('3', "def");
-        digitToLetters.put('4', "ghi");
-        digitToLetters.put('5', "jkl");
-        digitToLetters.put('6', "mno");
-        digitToLetters.put('7', "pqrs");
-        digitToLetters.put('8', "tuv");
-        digitToLetters.put('9', "wxyz");
-
-        backtrack(digits, 0, new StringBuilder(), res, digitToLetters);
-
-        return res;
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> combinations = new ArrayList<>();
+        backtrack(1,n,k,new ArrayList<>(),combinations);
+        return combinations;
     }
-
-    private void backtrack(String digits, int idx, StringBuilder comb, List<String> res, Map<Character, String> digitToLetters) {
-        if (idx == digits.length()) {
-            res.add(comb.toString());
+    private void backtrack(int start,int n,int k,ArrayList<Integer> combination,List<List<Integer>> combinations) {
+        if (k==0) {
+            combinations.add(new ArrayList<>(combination));
             return;
         }
 
-        String letters = digitToLetters.get(digits.charAt(idx));
-        for (char letter : letters.toCharArray()) {
-            comb.append(letter);
-            backtrack(digits, idx + 1, comb, res, digitToLetters);
-            comb.deleteCharAt(comb.length() - 1);
+        for (int i = start; i <=n ; i++) {
+            combination.add(i);
+            backtrack(i+1,n,k-1,combination,combinations);
+            combination.remove(combination.size()-1);
         }
     }
 }
