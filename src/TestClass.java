@@ -4,29 +4,25 @@ class TestClass {
     public static void main(String[] args) {
         TestClass testClass = new TestClass();
         int n = 4;
-        System.out.println(testClass.solveNQueens(n));
+        System.out.println(testClass.totalNQueens(n));
     }
-    public List<List<String>> solveNQueens(int n) {
-        List<List<String>> solutions = new ArrayList<>();
+    public int totalNQueens(int n) {
         char[][] board = new char[n][n];
         for (int i = 0; i < n; i++) Arrays.fill(board[i],'.');
-        backtrack(0,n,board,solutions);
-        return solutions;
+        backtrack(0,n,board);
+        return count;
     }
-    private void backtrack(int row,int n,char[][] board,List<List<String>> solutions){
+    private int count = 0;
+    private void backtrack(int row,int n,char[][] board){
         if (row==n){
-            List<String> solution = new ArrayList<>();
-            for (char[] level : board) {
-                solution.add(new String(level));
-            }
-            solutions.add(solution);
+            count++;
             return;
         }
 
         for (int col = 0; col < n; col++) {
             if (safePlace(row,col,n,board)){
                 board[row][col] = 'Q';
-                backtrack(row+1,n,board,solutions);
+                backtrack(row+1,n,board);
                 board[row][col] = '.';
             }
         }
