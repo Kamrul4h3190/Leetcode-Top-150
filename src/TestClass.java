@@ -3,29 +3,31 @@ import java.util.*;
 class TestClass {
     public static void main(String[] args) {
         TestClass testClass = new TestClass();
-        int n = 3;
-        System.out.println(testClass.generateParenthesis(n));
+        char[][] board = {{'A','B','C','E'},{'S','F','C','S'},{'A','D','E','E'}}; String word = "ABCCED";
+        System.out.println(testClass.exist(board,word));
     }
-    public List<String> generateParenthesis(int n) {
-        List<String> paranthesis = new ArrayList<>();
-        generate(0,0,n,new StringBuilder(),paranthesis);
-        return paranthesis;
-    }
-    private void generate(int open,int close,int n,StringBuilder curr,List<String> paranthesis){
-        if (curr.length()==2*n){
-            paranthesis.add(curr.toString());
-            return;
+    public boolean exist(char[][] board, String word) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j]==word.charAt(0) && wordFound(board,word,i,j,0))
+                    return true;
+            }
         }
+        return false;
+    }
+    private boolean wordFound(char[][] board,String word,int i,int j,int count){
+        if (count == word.length()) return true;
+        if (i<0 || j<0 || i>= board.length || j>=board[0].length) return false;
+        if (board[i][j]=='*' || board[i][j]!=word.charAt(count)) return false;
 
-        if(open<n){
-            curr.append("(");
-            generate(open+1,close,n,curr,paranthesis);
-            curr.deleteCharAt(curr.length()-1);
+        char temp = board[i][j];
+        board[i][j] = '*';
+        int[][] directions = {{1,0},{-1,0},{0,1},{0,-1}};
+        for (int[] direction : directions) {
+            if (wordFound(board, word, i + direction[0], j + direction[1], count + 1)) return true;
         }
-        if(close<open){
-            curr.append(")");
-            generate(open,close+1,n,curr,paranthesis);
-            curr.deleteCharAt(curr.length()-1);
-        }
+        board[i][j] = temp;
+
+        return false;
     }
 }
