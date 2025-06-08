@@ -3,41 +3,29 @@ import java.util.*;
 class TestClass {
     public static void main(String[] args) {
         TestClass testClass = new TestClass();
-        int n = 4;
-        System.out.println(testClass.totalNQueens(n));
+        int n = 3;
+        System.out.println(testClass.generateParenthesis(n));
     }
-    public int totalNQueens(int n) {
-        char[][] board = new char[n][n];
-        for (int i = 0; i < n; i++) Arrays.fill(board[i],'.');
-        backtrack(0,n,board);
-        return count;
+    public List<String> generateParenthesis(int n) {
+        List<String> paranthesis = new ArrayList<>();
+        generate(0,0,n,new StringBuilder(),paranthesis);
+        return paranthesis;
     }
-    private int count = 0;
-    private void backtrack(int row,int n,char[][] board){
-        if (row==n){
-            count++;
+    private void generate(int open,int close,int n,StringBuilder curr,List<String> paranthesis){
+        if (curr.length()==2*n){
+            paranthesis.add(curr.toString());
             return;
         }
 
-        for (int col = 0; col < n; col++) {
-            if (safePlace(row,col,n,board)){
-                board[row][col] = 'Q';
-                backtrack(row+1,n,board);
-                board[row][col] = '.';
-            }
+        if(open<n){
+            curr.append("(");
+            generate(open+1,close,n,curr,paranthesis);
+            curr.deleteCharAt(curr.length()-1);
         }
-    }
-
-    private boolean safePlace(int row,int col,int n,char[][] board) {
-        for (int i = 0; i < row; i++) //vertical attack
-            if (board[i][col]=='Q') return false;
-
-        for (int i = row-1,j=col-1; i >=0 && j>=0 ; i--,j--)  //upper left diagonal attack
-            if (board[i][j]=='Q') return false;
-
-        for (int i = row-1,j=col+1; i >=0 && j<n ; i--,j++)  //upper right diagonal attack
-            if (board[i][j]=='Q') return false;
-
-        return true; //no attack
+        if(close<open){
+            curr.append(")");
+            generate(open,close+1,n,curr,paranthesis);
+            curr.deleteCharAt(curr.length()-1);
+        }
     }
 }
