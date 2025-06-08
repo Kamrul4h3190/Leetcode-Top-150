@@ -3,26 +3,45 @@ import java.util.*;
 class TestClass {
     public static void main(String[] args) {
         TestClass testClass = new TestClass();
-        int[] candidates = {2,3,6,7}; int target = 7;
-        System.out.println(testClass.combinationSum(candidates,target));
+        int n = 4;
+        System.out.println(testClass.solveNQueens(n));
     }
-    public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        List<List<Integer>> combinations = new ArrayList<>();
-        backtrack(0,target,candidates,new ArrayList<>(),combinations);
-        return combinations;
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> solutions = new ArrayList<>();
+        char[][] board = new char[n][n];
+        for (int i = 0; i < n; i++) Arrays.fill(board[i],'.');
+        backtrack(0,n,board,solutions);
+        return solutions;
     }
-    private void backtrack(int index, int target, int[] candidates, List<Integer> combination, List<List<Integer>> combinations){
-        if (target==0){
-            combinations.add(new ArrayList<>(combination));
+    private void backtrack(int row,int n,char[][] board,List<List<String>> solutions){
+        if (row==n){
+            List<String> solution = new ArrayList<>();
+            for (char[] level : board) {
+                solution.add(new String(level));
+            }
+            solutions.add(solution);
             return;
         }
 
-        if (target<0) return;
-
-        for (int i = index; i <candidates.length ; i++) {
-            combination.add(candidates[i]);
-            backtrack(i,target-candidates[i],candidates,combination,combinations);
-            combination.removeLast();
+        for (int col = 0; col < n; col++) {
+            if (safePlace(row,col,n,board)){
+                board[row][col] = 'Q';
+                backtrack(row+1,n,board,solutions);
+                board[row][col] = '.';
+            }
         }
+    }
+
+    private boolean safePlace(int row,int col,int n,char[][] board) {
+        for (int i = 0; i < row; i++) //vertical attack
+            if (board[i][col]=='Q') return false;
+
+        for (int i = row-1,j=col-1; i >=0 && j>=0 ; i--,j--)  //upper left diagonal attack
+            if (board[i][j]=='Q') return false;
+
+        for (int i = row-1,j=col+1; i >=0 && j<n ; i--,j++)  //upper right diagonal attack
+            if (board[i][j]=='Q') return false;
+
+        return true; //no attack
     }
 }
